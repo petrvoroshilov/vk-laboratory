@@ -1,1 +1,253 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ты застрял в лифте — ВК-лаборатория</title>
+  <meta name="description" content="Интерактивный мини-мультик: ты застрял в лифте. Выбирай действие — сцена реагирует движением. 7 концовок.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ВК-лаборатория">
+  <meta property="og:title" content="Ты застрял в лифте — интерактив">
+  <meta property="og:description" content="Мини-мультик с выбором: кабина, мигающий свет, едущие двери. 7 концовок, прогресс сохраняется.">
+  <meta property="og:url" content="https://vk-laboratory.pages.dev/elevator/">
+  <meta property="og:image" content="https://vk-laboratory.pages.dev/elevator/preview-elevator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root{
+      --bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;
+      --danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at 18% 18%,rgba(34,211,238,.18),transparent 32%),radial-gradient(circle at 82% 78%,rgba(163,230,53,.14),transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+    .app{width:min(760px,100%);background:var(--card);border:1px solid var(--border);border-radius:26px;box-shadow:0 24px 80px rgba(0,0,0,.48);overflow:hidden;backdrop-filter:blur(10px)}
+    header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{font-weight:800;letter-spacing:.3px;color:var(--accent)}
+    .badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:7px 11px;border-radius:999px;white-space:nowrap}
+    .stage-wrap{padding:18px 22px 0}
+    .stage{width:100%;aspect-ratio:400/260;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:#0a0f1c;position:relative}
+    .stage svg{display:block;width:100%;height:100%}
+    /* свечение по типу сцены */
+    #glow{transition:fill .5s ease,opacity .5s ease}
+    .stage[data-tint="neutral"] #glow{fill:#1b2740;opacity:.5}
+    .stage[data-tint="good"] #glow{fill:#16331f;opacity:.7}
+    .stage[data-tint="warn"] #glow{fill:#3a2a12;opacity:.7}
+    .stage[data-tint="bad"] #glow{fill:#3a1420;opacity:.8}
+    /* двери едут плавно — это и есть "движение" */
+    #doorL,#doorR{transition:transform .6s cubic-bezier(.4,0,.2,1)}
+    .stage[data-door="closed"] #doorL{transform:translateX(0)}
+    .stage[data-door="closed"] #doorR{transform:translateX(0)}
+    .stage[data-door="crack"] #doorL{transform:translateX(-16px)}
+    .stage[data-door="crack"] #doorR{transform:translateX(16px)}
+    .stage[data-door="open"] #doorL{transform:translateX(-92px)}
+    .stage[data-door="open"] #doorR{transform:translateX(92px)}
+    /* аварийный свет */
+    #light{transition:fill .4s ease}
+    .stage[data-light="flicker"] #light{animation:flick 1.1s infinite}
+    .stage[data-light="steady"] #light{fill:#ffe9a8;opacity:1}
+    .stage[data-light="dim"] #light{fill:#5b5535;opacity:.35}
+    .stage[data-light="danger"] #light{fill:var(--danger);animation:flick .35s infinite}
+    @keyframes flick{0%,100%{opacity:1}45%{opacity:.25}55%{opacity:.85}}
+    /* силуэт: позы через transform, transition даёт "оживание" */
+    #person{transform-origin:200px 150px;transition:transform .5s ease}
+    #arm{opacity:0;transition:opacity .3s ease}
+    .stage[data-pose="stand"] #person{transform:translate(0,0)}
+    .stage[data-pose="reach"] #person{transform:translate(0,-6px)}
+    .stage[data-pose="reach"] #arm{opacity:1}
+    .stage[data-pose="sit"] #person{transform:translate(0,30px) scale(1,.78)}
+    .stage[data-pose="lie"] #person{transform:translate(6px,40px) rotate(-72deg)}
+    .stage[data-pose="fall"] #person{transform:translate(2px,46px) rotate(24deg)}
+    .stage[data-pose="exit"] #person{transform:translate(0,-46px)}
+    /* тряска кабины при резком событии */
+    #cabin{transform-origin:200px 130px}
+    .stage.shake #cabin{animation:shake .5s ease}
+    @keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-3px,2px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,-1px)}80%{transform:translate(2px,1px)}}
+    /* появление текста/кнопок */
+    .story,.choices{animation:fade .45s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    main{padding:18px 22px 22px}
+    .scene-title{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent2);margin-bottom:8px}
+    .scene-text{font-size:16px;line-height:1.55;margin:0 0 18px;white-space:pre-line}
+    .choices{display:grid;gap:10px}
+    button{appearance:none;border:0;cursor:pointer;font:inherit}
+    .choice{width:100%;text-align:left;padding:13px 16px;border-radius:14px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);transition:transform .12s,background .12s,border-color .12s}
+    .choice:hover,.choice:focus-visible{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.45);transform:translateY(-1px);outline:none}
+    .choice:active{transform:scale(.99)}
+    .result{padding:16px;border-radius:16px;background:rgba(163,230,53,.08);border:1px solid rgba(163,230,53,.25)}
+    .result.danger{background:rgba(251,113,133,.08);border-color:rgba(251,113,133,.28)}
+    .result.neutral{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+    .result h2{margin:0 0 8px;font-size:19px;line-height:1.25}
+    .result p{margin:0;color:var(--muted);line-height:1.5;white-space:pre-line}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+    .secondary{padding:9px 14px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border)}
+    .secondary:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+    .meta{display:flex;justify-content:space-between;gap:10px;margin-top:12px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+    footer{padding:12px 22px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;line-height:1.4}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:560px){main{padding:14px 16px 18px}.stage-wrap{padding:14px 16px 0}.scene-text{font-size:15px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">ВК-лаборатория</div>
+      <div class="badge" id="progressBadge">Шаг 1</div>
+    </header>
 
+    <div class="stage-wrap">
+      <div class="stage" id="stage" data-door="closed" data-light="flicker" data-pose="stand" data-tint="neutral">
+        <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect id="glow" x="0" y="0" width="400" height="260" fill="#1b2740" opacity=".5"/>
+          <g id="cabin">
+            <!-- шахта за дверями (тросы) -->
+            <g id="shaft">
+              <rect x="112" y="42" width="176" height="176" fill="#05070d"/>
+              <line x1="150" y1="42" x2="150" y2="218" stroke="#2a3350" stroke-width="2"/>
+              <line x1="250" y1="42" x2="250" y2="218" stroke="#2a3350" stroke-width="2"/>
+              <line x1="200" y1="42" x2="200" y2="218" stroke="#1a2138" stroke-width="1"/>
+            </g>
+            <!-- створки дверей -->
+            <rect id="doorL" x="112" y="42" width="88" height="176" fill="#28324c" stroke="#3c4a6e" stroke-width="1.5"/>
+            <rect id="doorR" x="200" y="42" width="88" height="176" fill="#28324c" stroke="#3c4a6e" stroke-width="1.5"/>
+            <line id="seam" x1="200" y1="46" x2="200" y2="214" stroke="#0c1120" stroke-width="2"/>
+            <!-- рамка кабины -->
+            <rect x="108" y="38" width="184" height="184" rx="6" fill="none" stroke="#46557d" stroke-width="3"/>
+            <!-- панель кнопок -->
+            <rect x="276" y="92" width="12" height="40" rx="3" fill="#11182a" stroke="#3c4a6e"/>
+            <circle cx="282" cy="100" r="2" fill="#22d3ee"/>
+            <circle cx="282" cy="110" r="2" fill="#9ca3af"/>
+            <circle cx="282" cy="120" r="2" fill="#9ca3af"/>
+            <!-- аварийный свет -->
+            <circle id="light" cx="200" cy="52" r="7" fill="#ffe9a8"/>
+            <!-- силуэт -->
+            <g id="person" fill="#cfe9ff">
+              <line id="arm" x1="200" y1="120" x2="232" y2="96" stroke="#cfe9ff" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="200" cy="108" r="11"/>
+              <path d="M188 120 Q200 116 212 120 L214 168 Q200 174 186 168 Z"/>
+              <rect x="190" y="166" width="8" height="34" rx="3"/>
+              <rect x="202" y="166" width="8" height="34" rx="3"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <main>
+      <div class="scene-title" id="sceneTitle">Ситуация</div>
+      <div class="scene-text" id="sceneText" aria-live="polite"></div>
+      <div class="choices" id="choices"></div>
+      <div id="resultBox"></div>
+      <div class="controls">
+        <button class="secondary" id="restartBtn">Начать заново</button>
+        <button class="secondary" id="copyBtn">Скопировать результат</button>
+        <button class="secondary" id="endingsBtn">Найдено концовок: <span id="endingsCount">0</span>/7</button>
+      </div>
+      <div class="meta">
+        <span>Прогресс сохраняется в этом браузере</span>
+        <span id="stepCounter">Шаг: 0</span>
+      </div>
+    </main>
+    <footer>Это интерактивная история, а не официальная инструкция. В реальной опасной ситуации звони 112.</footer>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY="vklab_elevator_v2";
+    const TOTAL_ENDINGS=7;
+    // vis: door=closed|crack|open, light=flicker|steady|dim|danger, pose=stand|reach|sit|lie|fall|exit, tint=neutral|good|warn|bad, shake=bool
+    const scenes={
+      start:{title:"Глава 1. Остановка",vis:{door:"closed",light:"flicker",pose:"stand",tint:"neutral",shake:true},
+        text:"Лифт резко дёрнулся и замер между этажами. Свет мигнул, затем загорелся тусклый аварийный огонёк. Ты один в кабине.\n\nЧто сделаешь первым делом?",
+        choices:[{text:"Нажать кнопку вызова диспетчера",next:"call"},{text:"Постучать в дверь и позвать на помощь",next:"knock"},{text:"Попытаться раздвинуть двери руками",next:"force"},{text:"Сесть, выдохнуть и осмотреться",next:"wait_calm"}]},
+      call:{title:"Кнопка вызова",vis:{door:"closed",light:"steady",pose:"reach",tint:"neutral",shake:false},
+        text:"Ты тянешься к панели и нажимаешь кнопку связи. Динамик шипит, затем раздаётся голос:\n\n«Вызов принят. Представьтесь и укажите, между какими этажами застряли».",
+        choices:[{text:"Спокойно назвать адрес и примерный этаж",next:"calm"},{text:"Сразу потребовать спасателей",next:"rescue"},{text:"Положить трубку и постучать в дверь",next:"knock"}]},
+      calm:{title:"Спокойный диалог",vis:{door:"closed",light:"steady",pose:"stand",tint:"good",shake:false},
+        ending:{id:"safe_wait",type:"success",title:"Безопасная концовка: ожидание",text:"Ты спокойно передаёшь данные. Диспетчер говорит:\n\n«Не пытайтесь выходить. Заявка передана лифтеру».\n\nТы ждёшь внутри, и помощь прибывает. Главное — не покидать кабину, пока двери не откроют специалисты."}},
+      rescue:{title:"Эскалация",vis:{door:"closed",light:"flicker",pose:"reach",tint:"warn",shake:false},
+        text:"Ты просишь вызвать спасателей немедленно. Диспетчер уточняет:\n\n«Есть ли угроза жизни? Кому-то плохо? В кабине есть дети?»\n\nЧто ответишь?",
+        choices:[{text:"Чётко сказать: угрозы нет, но нужна эвакуация",next:"safe_rescue"},{text:"Начать паниковать и кричать в трубку",next:"panic"}]},
+      safe_rescue:{title:"Чёткий вызов",vis:{door:"open",light:"steady",pose:"exit",tint:"good",shake:false},
+        ending:{id:"safe_rescue",type:"success",title:"Безопасная концовка: спасатели",text:"Двери аккуратно расходятся, в щель льётся свет лестничной площадки. Спасатели выводят тебя.\n\nСпокойные данные важнее паники: они помогают службам понять, что действительно нужно делать."}},
+      panic:{title:"Паника в трубке",vis:{door:"closed",light:"flicker",pose:"stand",tint:"warn",shake:true},
+        text:"Ты кричишь, дыхание сбивается, кабина будто дрожит от напряжения. Диспетчер просит:\n\n«Успокойтесь и повторите адрес. Иначе я не смогу точно передать информацию».",
+        choices:[{text:"Взять себя в руки и назвать данные",next:"safe_rescue"},{text:"Бросить трубку и стучать в дверь",next:"knock"}]},
+      knock:{title:"Стук в дверь",vis:{door:"closed",light:"flicker",pose:"reach",tint:"warn",shake:false},
+        text:"Ты стучишь по двери и зовёшь на помощь. Эхо в шахте неприятно отдаётся в ушах.\n\nЗа дверью сначала тишина, потом слышны шаги.",
+        choices:[{text:"Кричать: «Помогите!»",next:"shout"},{text:"Попросить кого-то снаружи позвонить диспетчеру",next:"ask_help"},{text:"Вернуться к кнопке вызова",next:"call"}]},
+      shout:{title:"Крик",vis:{door:"closed",light:"dim",pose:"reach",tint:"warn",shake:false},
+        text:"Ты начинаешь громко кричать. Через минуту горло саднит, а сил становится меньше.\n\nВ многоэтажном доме тебя могут просто не услышать.",
+        choices:[{text:"Продолжать кричать",next:"risky_noise"},{text:"Остановиться и нажать кнопку вызова",next:"call"}]},
+      risky_noise:{title:"Крик без толку",vis:{door:"closed",light:"dim",pose:"sit",tint:"warn",shake:false},
+        ending:{id:"risky_noise",type:"warning",title:"Тревожная концовка: крик",text:"Ты кричишь, пока не садится голос. В шахте звук гаснет, а снаружи тебя не слышно.\n\nПомощь приходит позже, но ты потратил силы и нервы.\n\nЭффективнее: кнопка вызова, 112, спокойствие."}},
+      ask_help:{title:"Помощь снаружи",vis:{door:"crack",light:"steady",pose:"stand",tint:"good",shake:false},
+        ending:{id:"safe_neighbor",type:"success",title:"Безопасная концовка: помощь снаружи",text:"Кто-то за дверью слышит тебя и приоткрывает створку, звоня диспетчеру.\n\nТы остаёшься в кабине и не предпринимаешь опасных действий.\n\nВажно: звать помощь можно, но не пытаться выходить самому."}},
+      force:{title:"Опасная попытка",vis:{door:"crack",light:"danger",pose:"reach",tint:"bad",shake:true},
+        text:"Ты пытаешься раздвинуть двери руками. Они поддаются лишь на пару сантиметров.\n\nЗа ними — тёмная шахта, тросы и направляющие. Лифт может внезапно дёрнуться.",
+        choices:[{text:"Остановиться и нажать кнопку вызова",next:"call"},{text:"Достать телефон и позвонить 112",next:"phone_112"},{text:"Попытаться вылезти через щель",next:"dangerous_force"}]},
+      phone_112:{title:"Телефон",vis:{door:"crack",light:"steady",pose:"reach",tint:"warn",shake:false},
+        text:"Ты достаёшь телефон. Сеть есть, но батарея 18%.\n\nМожно позвонить 112 и назвать адрес, а можно беречь заряд и ждать.",
+        choices:[{text:"Позвонить 112 и назвать адрес",next:"safe_112"},{text:"Беречь батарею и сидеть спокойно",next:"wait_calm"}]},
+      safe_112:{title:"Звонок 112",vis:{door:"open",light:"steady",pose:"exit",tint:"good",shake:false},
+        ending:{id:"safe_112",type:"success",title:"Безопасная концовка: 112",text:"Ты звонишь 112, называешь адрес и номер лифта с таблички. Двери расходятся — приехали.\n\nЕсли есть телефон и сеть — это сильный вариант."}},
+      dangerous_force:{title:"Выход в шахту",vis:{door:"open",light:"danger",pose:"fall",tint:"bad",shake:true},
+        ending:{id:"dangerous_force",type:"danger",title:"Опасная концовка: выход в шахту",text:"Ты лезешь через щель в чёрную шахту.\n\nЭто худший вариант: лифт может прийти в движение, можно упасть, получить травму или удар током.\n\nТак делать нельзя."}},
+      wait_calm:{title:"Пауза",vis:{door:"closed",light:"steady",pose:"sit",tint:"neutral",shake:false},
+        text:"Ты садишься на пол кабины, дышишь ровно и осматриваешься.\n\nВ лифте обычно есть табличка с номером телефона, адресом объекта и номером лифта.",
+        choices:[{text:"Внимательно прочитать табличку",next:"inspect"},{text:"Нажать кнопку вызова",next:"call"},{text:"Закрыть глаза и немного отдохнуть",next:"sleep"}]},
+      inspect:{title:"Табличка в лифте",vis:{door:"closed",light:"steady",pose:"reach",tint:"neutral",shake:false},
+        text:"На стене есть номер лифта, адрес организации и телефон аварийной службы.\n\nЭти детали сильно ускоряют помощь.",
+        choices:[{text:"Позвонить по номеру с таблички",next:"call"},{text:"Сесть и ждать, соблюдая инструкцию",next:"calm"}]},
+      sleep:{title:"Сон в кабине",vis:{door:"closed",light:"dim",pose:"lie",tint:"warn",shake:false},
+        text:"От стресса и духоты клонит в сон.\n\nТы думаешь: вздремну, пока ждут. Это опасно: можно пропустить прибытие помощи или хуже перенести ожидание.",
+        choices:[{text:"Решительно взять себя в руки и нажать вызов",next:"call"},{text:"Закрыть глаза и уснуть",next:"risky_sleep"}]},
+      risky_sleep:{title:"Сонливость",vis:{door:"crack",light:"steady",pose:"sit",tint:"warn",shake:false},
+        ending:{id:"risky_sleep",type:"warning",title:"Тревожная концовка: сонливость",text:"Ты просыпаешься от стука в дверь: спасатели уже рядом, приоткрыли створку.\n\nНо из-за сна ты потерял контроль, время и ясность.\n\nВ реальной ситуации лучше бодрствовать и поддерживать связь."}}
+    };
+
+    const $=id=>document.getElementById(id);
+    const stage=$("stage"),sceneTitle=$("sceneTitle"),sceneText=$("sceneText"),choicesEl=$("choices"),resultBox=$("resultBox"),progressBadge=$("progressBadge"),stepCounter=$("stepCounter"),endingsCount=$("endingsCount"),toastEl=$("toast");
+    let toastTimer=null,state=null;
+
+    function norm(raw){const f={scene:"start",steps:0,endings:[]};if(!raw||typeof raw!=="object")return f;return{scene:scenes[raw.scene]?raw.scene:"start",steps:Number.isFinite(raw.steps)&&raw.steps>=0?Math.floor(raw.steps):0,endings:Array.isArray(raw.endings)?raw.endings.filter(Boolean):[]};}
+    function load(){try{return norm(JSON.parse(localStorage.getItem(STORAGE_KEY)));}catch(e){return norm(null);}}
+    function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+    function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+    function toast(m){toastEl.textContent=m;toastEl.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove("show"),2300);}
+    function mark(id){if(!id)return;if(!state.endings.includes(id)){state.endings.push(id);save();toast("Новая концовка найдена!");}}
+    function applyVis(vis){stage.dataset.door=vis.door;stage.dataset.light=vis.light;stage.dataset.pose=vis.pose;stage.dataset.tint=vis.tint;if(vis.shake){stage.classList.remove("shake");void stage.offsetWidth;stage.classList.add("shake");}else{stage.classList.remove("shake");}}
+    function replay(sel){sel.classList.remove("replay");void sel.offsetWidth;sel.classList.add("replay");}
+    function resultText(){const s=scenes[state.scene];if(s&&s.ending){return["Я прошёл интерактив «Ты застрял в лифте» от ВК-лаборатории.","","Концовка: "+s.ending.title,s.ending.text,"","Шагов: "+state.steps,"Найдено концовок: "+state.endings.length+"/"+TOTAL_ENDINGS,"Ссылка: "+window.location.href].join("\n");}return["Я играю в «Ты застрял в лифте» от ВК-лаборатории.","","Сцена: "+(s&&s.title?s.title:"?"),s&&s.text?s.text:"","","Шагов: "+state.steps,"Найдено концовок: "+state.endings.length+"/"+TOTAL_ENDINGS,"Ссылка: "+window.location.href].join("\n");}
+    async function copy(t){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);toast("Скопировано");return;}}catch(e){}try{const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Скопировано");}catch(e){toast("Не удалось скопировать");}}
+    function choose(next){if(!scenes[next])return;state.scene=next;state.steps+=1;save();render();window.scrollTo({top:0,behavior:"smooth"});}
+    function restart(){state.scene="start";state.steps=0;save();render();toast("История начата заново. Найденные концовки сохранены.");}
+    function render(){
+      let s=scenes[state.scene];
+      if(!s){state.scene="start";state.steps=0;save();s=scenes.start;}
+      applyVis(s.vis||{door:"closed",light:"flicker",pose:"stand",tint:"neutral",shake:false});
+      sceneTitle.textContent=s.title||"Сцена";
+      sceneText.textContent=s.text||"";
+      choicesEl.innerHTML="";resultBox.innerHTML="";
+      replay(sceneText);replay(choicesEl);
+      if(s.ending){
+        mark(s.ending.id);progressBadge.textContent="Финал";
+        const r=document.createElement("div");
+        r.className="result "+(s.ending.type==="danger"?"danger":s.ending.type==="success"?"":"neutral");
+        r.innerHTML="<h2>"+esc(s.ending.title)+"</h2><p>"+esc(s.ending.text)+"</p>";
+        resultBox.appendChild(r);replay(resultBox);
+      }else{
+        progressBadge.textContent="Шаг "+(state.steps+1);
+        (s.choices||[]).forEach(c=>{const b=document.createElement("button");b.className="choice";b.type="button";b.textContent=c.text;b.addEventListener("click",()=>choose(c.next));choicesEl.appendChild(b);});
+      }
+      endingsCount.textContent=state.endings.length;
+      stepCounter.textContent="Шаг: "+state.steps;
+    }
+    $("restartBtn").addEventListener("click",restart);
+    $("copyBtn").addEventListener("click",()=>copy(resultText()));
+    $("endingsBtn").addEventListener("click",()=>toast("Открыто "+state.endings.length+" из "+TOTAL_ENDINGS+". Попробуй другие ветки."));
+    state=load();render();
+  </script>
+</body>
+</html>
