@@ -228,6 +228,7 @@
       <div class="controls">
         <button class="secondary" id="restartBtn">Начать заново</button>
         <button class="secondary" id="copyBtn">Скопировать результат</button>
+        <button class="secondary" id="shareBtn">Поделиться в ВК</button>
         <button class="secondary" id="endingsBtn">Найдено концовок: <span id="endingsCount">0</span>/7</button>
       </div>
       <div class="meta">
@@ -351,6 +352,11 @@
     }
     $("restartBtn").addEventListener("click",restart);
     $("copyBtn").addEventListener("click",()=>copy(resultText()));
+    $("shareBtn").addEventListener("click",()=>{
+      const s=scenes[state.scene];
+      const t=s&&s.ending?("Я прошёл «Ты застрял в лифте»: "+s.ending.title+" ("+state.endings.length+"/7 концовок)"):"Играю в «Ты застрял в лифте» — интерактив от ВК-лаборатории";
+      window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");
+    });
     $("endingsBtn").addEventListener("click",()=>toast("Открыто "+state.endings.length+" из "+TOTAL_ENDINGS+". Попробуй другие ветки."));
     state=load();render();
   </script>
