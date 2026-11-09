@@ -3,675 +3,84 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Интерактивная история: ты застрял в лифте. Выбери действие и посмотри, к чему оно приведёт.">
-  <title>ВК-лаборатория: Ты застрял в лифте</title>
+  <title>ВК-лаборатория — интерактивы, скрипты, макросы без оплаты</title>
+  <meta name="description" content="Каждый день маленькая полезная вещь: интерактивные истории, скрипты, макросы, команды. Без подписок, с открытым кодом.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ВК-лаборатория">
+  <meta property="og:title" content="ВК-лаборатория">
+  <meta property="og:description" content="Интерактивы · Скрипты · Макросы · Без оплаты. Код открыт, запуск в браузере.">
+  <meta property="og:url" content="https://vk-laboratory.pages.dev/">
+  <meta property="og:image" content="https://vk-laboratory.pages.dev/preview-home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <style>
-    :root {
-      --bg: #070b14;
-      --card: rgba(17, 24, 39, 0.86);
-      --accent: #22d3ee;
-      --accent2: #a3e635;
-      --danger: #fb7185;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border: rgba(255, 255, 255, 0.10);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.18), transparent 32%),
-        radial-gradient(circle at 82% 78%, rgba(163, 230, 53, 0.14), transparent 34%),
-        radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.12), transparent 42%),
-        var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .app {
-      width: min(760px, 100%);
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-    }
-
-    header {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand {
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      color: var(--accent);
-    }
-
-    .badge {
-      font-size: 12px;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 7px 11px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-
-    main {
-      padding: 24px;
-    }
-
-    .scene-title {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--accent2);
-      margin-bottom: 10px;
-    }
-
-    .scene-text {
-      font-size: 18px;
-      line-height: 1.58;
-      margin: 0 0 22px;
-      white-space: pre-line;
-    }
-
-    .choices {
-      display: grid;
-      gap: 12px;
-    }
-
-    button {
-      appearance: none;
-      border: 0;
-      cursor: pointer;
-      font: inherit;
-    }
-
-    .choice {
-      width: 100%;
-      text-align: left;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-      border: 1px solid var(--border);
-      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
-    }
-
-    .choice:hover,
-    .choice:focus-visible {
-      background: rgba(34, 211, 238, 0.12);
-      border-color: rgba(34, 211, 238, 0.45);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .choice:active {
-      transform: translateY(0) scale(0.99);
-    }
-
-    .result {
-      margin-top: 4px;
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(163, 230, 53, 0.08);
-      border: 1px solid rgba(163, 230, 53, 0.25);
-    }
-
-    .result.danger {
-      background: rgba(251, 113, 133, 0.08);
-      border-color: rgba(251, 113, 133, 0.28);
-    }
-
-    .result.neutral {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    .result h2 {
-      margin: 0 0 10px;
-      font-size: 21px;
-      line-height: 1.25;
-    }
-
-    .result p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      white-space: pre-line;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-    }
-
-    .secondary {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-
-    .secondary:hover {
-      color: var(--text);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 13px;
-      flex-wrap: wrap;
-    }
-
-    footer {
-      padding: 14px 22px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-      line-height: 1.45;
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%) translateY(20px);
-      background: #111827;
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      padding: 11px 15px;
-      border-radius: 999px;
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.22s ease;
-      max-width: calc(100vw - 32px);
-      text-align: center;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    @media (max-width: 560px) {
-      main {
-        padding: 18px;
-      }
-
-      header {
-        padding: 16px;
-      }
-
-      .scene-text {
-        font-size: 17px;
-      }
-
-      .result h2 {
-        font-size: 19px;
-      }
-    }
+    :root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,rgba(34,211,238,.16),transparent 30%),radial-gradient(circle at 85% 90%,rgba(163,230,53,.12),transparent 32%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px}
+    .wrap{max-width:880px;margin:0 auto}
+    .hero{text-align:center;padding:28px 18px 22px}
+    .logo{width:84px;height:84px;margin:0 auto 14px;display:block}
+    h1{font-size:clamp(28px,6vw,46px);margin:0 0 8px;letter-spacing:.5px}
+    .tag{color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:13px;margin-bottom:10px}
+    .sub{color:var(--muted);font-size:16px;line-height:1.5;max-width:560px;margin:0 auto}
+    .grid{display:grid;gap:16px;margin-top:26px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:22px;overflow:hidden;display:grid;grid-template-columns:200px 1fr;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+    .thumb{background:#0a0f1c;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--border)}
+    .thumb svg{width:100%;height:100%}
+    .body{padding:18px 20px}
+    .kicker{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+    .body h2{margin:0 0 8px;font-size:22px}
+    .body p{margin:0 0 14px;color:var(--muted);line-height:1.5;font-size:15px}
+    .btn{display:inline-block;padding:11px 18px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:700;text-decoration:none;font-size:14px}
+    .btn:hover{filter:brightness(1.08)}
+    .soon{background:rgba(255,255,255,.03);border:1px dashed var(--border);border-radius:18px;padding:16px 18px;color:var(--muted);font-size:14px;line-height:1.6}
+    .soon b{color:var(--text)}
+    footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;line-height:1.5}
+    @media(max-width:560px){.card{grid-template-columns:1fr}.thumb{border-right:0;border-bottom:1px solid var(--border);height:150px}}
   </style>
 </head>
 <body>
-  <div class="app" role="application" aria-label="Интерактивная история">
-    <header>
-      <div class="brand">ВК-лаборатория</div>
-      <div class="badge" id="progressBadge">Шаг 1</div>
-    </header>
+  <div class="wrap">
+    <div class="hero">
+      <svg class="logo" viewBox="0 0 200 200" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs>
+        <rect x="91" y="38" width="18" height="34" rx="6" fill="#e5f7ff"/>
+        <path d="M72 72 L56 126 C52 146 66 162 86 162 L114 162 C134 162 148 146 144 126 L128 72 Z" fill="url(#lg)"/>
+        <path d="M72 72 L56 126 C52 146 66 162 86 162 L114 162 C134 162 148 146 144 126 L128 72 Z" fill="none" stroke="#dffafe" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="86" cy="126" r="6" fill="#fff" opacity=".55"/><circle cx="108" cy="140" r="4" fill="#fff" opacity=".45"/>
+      </svg>
+      <div class="tag">Ежедневные эксперименты</div>
+      <h1>ВК-лаборатория</h1>
+      <div class="sub">Интерактивы · Скрипты · Макросы · Без оплаты. Код открыт, запуск прямо в браузере, никаких подписок.</div>
+    </div>
 
-    <main>
-      <div class="scene-title" id="sceneTitle">Ситуация</div>
-      <div class="scene-text" id="sceneText" aria-live="polite"></div>
-
-      <div class="choices" id="choices"></div>
-      <div id="resultBox"></div>
-
-      <div class="controls">
-        <button class="secondary" id="restartBtn">Начать заново</button>
-        <button class="secondary" id="copyBtn">Скопировать результат</button>
-        <button class="secondary" id="endingsBtn">
-          Найдено концовок: <span id="endingsCount">0</span>/7
-        </button>
+    <div class="grid">
+      <div class="card">
+        <div class="thumb">
+          <svg viewBox="0 0 200 150" aria-hidden="true">
+            <rect width="200" height="150" fill="#0a0f1c"/>
+            <rect x="56" y="20" width="88" height="110" rx="4" fill="none" stroke="#46557d" stroke-width="2"/>
+            <rect x="58" y="22" width="42" height="106" fill="#28324c"/><rect x="100" y="22" width="42" height="106" fill="#28324c"/>
+            <line x1="100" y1="24" x2="100" y2="126" stroke="#0c1120" stroke-width="2"/>
+            <circle cx="100" cy="30" r="4" fill="#ffe9a8"/>
+            <circle cx="100" cy="70" r="7" fill="#cfe9ff"/><path d="M93 78 Q100 75 107 78 L108 104 Q100 108 92 104 Z" fill="#cfe9ff"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="kicker">Интерактив · мини-мультик</div>
+          <h2>Ты застрял в лифте</h2>
+          <p>Кабина, мигающий аварийный свет, едущие двери. Выбирай действие — сцена реагирует движением. 7 концовок, прогресс сохраняется.</p>
+          <a class="btn" href="elevator/">Открыть интерактив →</a>
+        </div>
       </div>
 
-      <div class="meta">
-        <span>Прогресс сохраняется в этом браузере</span>
-        <span id="stepCounter">Шаг: 0</span>
+      <div class="soon">
+        <b>Скоро в лаборатории:</b> офисный лифт (другая ситуация и ловушки) · мини-квест-расследование с инвентарём · полезные команды для Windows · макросы для Word и Excel · калькуляторы и тесты в браузере. Всё бесплатно, с открытым кодом и объяснением «как я это сделал».
       </div>
-    </main>
+    </div>
 
-    <footer>
-      Это интерактивная история, а не официальная инструкция.  
-      В реальной опасной ситуации звони 112.
-    </footer>
+    <footer>Сообщество ВКонтакте: <a href="https://vk.ru/vklaboratory1" style="color:var(--accent)">vk.ru/vklaboratory1</a><br>Код: github.com/petrvoroshilov/vk-laboratory · Публикация: GitHub Pages + Cloudflare Pages (бесплатно)</footer>
   </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const STORAGE_KEY = "vklab_elevator_v1";
-    const TOTAL_ENDINGS = 7;
-
-    const scenes = {
-      start: {
-        title: "Глава 1. Остановка",
-        text: "Лифт резко дёрнулся и замер между этажами. Свет мигнул, затем загорелся тусклый аварийный огонёк. Ты один в кабине.\n\nЧто сделаешь первым делом?",
-        choices: [
-          { text: "Нажать кнопку вызова диспетчера", next: "call" },
-          { text: "Постучать в дверь и позвать на помощь", next: "knock" },
-          { text: "Попытаться раздвинуть двери руками", next: "force" },
-          { text: "Сесть, выдохнуть и осмотреться", next: "wait_calm" }
-        ]
-      },
-
-      call: {
-        title: "Кнопка вызова",
-        text: "Ты находишь кнопку связи с диспетчером и нажимаешь её. Динамик шипит, затем раздается голос:\n\n«Вызов принят. Представьтесь и укажите, между какими этажами застряли».",
-        choices: [
-          { text: "Спокойно назвать адрес и примерный этаж", next: "calm" },
-          { text: "Сразу потребовать спасателей", next: "rescue" },
-          { text: "Положить трубку и постучать в дверь", next: "knock" }
-        ]
-      },
-
-      calm: {
-        title: "Спокойный диалог",
-        ending: {
-          id: "safe_wait",
-          type: "success",
-          title: "Безопасная концовка: ожидание",
-          text: "Ты спокойно передаёшь данные. Диспетчер говорит:\n\n«Не пытайтесь выходить. Заявка передана лифтеру».\n\nТы ждёшь внутри, и помощь прибывает. Главное — не покидать кабину, пока двери не откроют специалисты."
-        }
-      },
-
-      rescue: {
-        title: "Эскалация",
-        text: "Ты просишь вызвать спасателей немедленно. Диспетчер уточняет:\n\n«Есть ли угроза жизни? Кому-то плохо? В кабине есть дети?»\n\nЧто ответишь?",
-        choices: [
-          { text: "Чётко сказать: угрозы нет, но нужна эвакуация", next: "safe_rescue" },
-          { text: "Начать паниковать и кричать в трубку", next: "panic" }
-        ]
-      },
-
-      safe_rescue: {
-        title: "Чёткий вызов",
-        ending: {
-          id: "safe_rescue",
-          type: "success",
-          title: "Безопасная концовка: спасатели",
-          text: "Ты спокойно объясняешь ситуацию. Спасатели приезжают и аккуратно выводят тебя.\n\nСпокойные данные важнее паники: они помогают службам понять, что действительно нужно делать."
-        }
-      },
-
-      panic: {
-        title: "Паника в трубке",
-        text: "Ты кричишь, дыхание сбивается. Диспетчер просит:\n\n«Успокойтесь и повторите адрес. Иначе я не смогу точно передать информацию».",
-        choices: [
-          { text: "Взять себя в руки и назвать данные", next: "safe_rescue" },
-          { text: "Бросить трубку и стучать в дверь", next: "knock" }
-        ]
-      },
-
-      knock: {
-        title: "Стук в дверь",
-        text: "Ты стучишь по двери и зовёшь на помощь. Эхо в шахте неприятно отдаётся в ушах.\n\nЗа дверью сначала тишина, потом слышны шаги.",
-        choices: [
-          { text: "Кричать: «Помогите!»", next: "shout" },
-          { text: "Попросить кого-то снаружи позвонить диспетчеру", next: "ask_help" },
-          { text: "Вернуться к кнопке вызова", next: "call" }
-        ]
-      },
-
-      shout: {
-        title: "Крик",
-        text: "Ты начинаешь громко кричать. Через минуту горло саднит, а сил становится меньше.\n\nВ многоэтажном доме тебя могут просто не услышать.",
-        choices: [
-          { text: "Продолжать кричать", next: "risky_noise" },
-          { text: "Остановиться и нажать кнопку вызова", next: "call" }
-        ]
-      },
-
-      risky_noise: {
-        title: "Крик без толку",
-        ending: {
-          id: "risky_noise",
-          type: "warning",
-          title: "Тревожная концовка: крик",
-          text: "Ты кричишь, пока не садится голос. В шахте звук гаснет, а снаружи тебя не слышно.\n\nПомощь приходит позже, но ты потратил силы и нервы.\n\nЭффективнее: кнопка вызова, 112, спокойствие."
-        }
-      },
-
-      ask_help: {
-        title: "Помощь снаружи",
-        ending: {
-          id: "safe_neighbor",
-          type: "success",
-          title: "Безопасная концовка: помощь снаружи",
-          text: "Кто-то за дверью слышит тебя и звонит диспетчеру или в службу спасения.\n\nТы остаёшься в кабине и не предпринимаешь опасных действий.\n\nВажно: звать помощь можно, но не пытаться выходить самому."
-        }
-      },
-
-      force: {
-        title: "Опасная попытка",
-        text: "Ты пытаешься раздвинуть двери руками. Они поддаются лишь на пару сантиметров.\n\nЗа ними — тёмная шахта, тросы и направляющие. Лифт может внезапно дёрнуться.",
-        choices: [
-          { text: "Остановиться и нажать кнопку вызова", next: "call" },
-          { text: "Достать телефон и позвонить 112", next: "phone_112" },
-          { text: "Попытаться вылезти через щель", next: "dangerous_force" }
-        ]
-      },
-
-      phone_112: {
-        title: "Телефон",
-        text: "Ты достаёшь телефон. Сеть есть, но батарея 18%.\n\nМожно позвонить 112 и назвать адрес, а можно беречь заряд и ждать.",
-        choices: [
-          { text: "Позвонить 112 и назвать адрес", next: "safe_112" },
-          { text: "Беречь батарею и сеждать спокойно", next: "wait_calm" }
-        ]
-      },
-
-      safe_112: {
-        title: "Звонок 112",
-        ending: {
-          id: "safe_112",
-          type: "success",
-          title: "Безопасная концовка: 112",
-          text: "Ты звонишь 112, называешь адрес и номер лифта, если видишь его на табличке.\n\nДиспетчер службы спасения координирует помощь.\n\nЕсли есть телефон и сеть — это сильный вариант."
-        }
-      },
-
-      dangerous_force: {
-        title: "Выход в шахту",
-        ending: {
-          id: "dangerous_force",
-          type: "danger",
-          title: "Опасная концовка: выход в шахту",
-          text: "Ты пытаешься выбраться через щель.\n\nЭто худший вариант: лифт может прийти в движение, можно упасть в шахту, получить травму или удар током.\n\nТак делать нельзя."
-        }
-      },
-
-      wait_calm: {
-        title: "Пауза",
-        text: "Ты садишься на пол кабины, дышишь ровно и осматриваешься.\n\nВ лифте обычно есть табличка с номером телефона, адресом объекта и номером лифта.",
-        choices: [
-          { text: "Внимательно прочитать табличку", next: "inspect" },
-          { text: "Нажать кнопку вызова", next: "call" },
-          { text: "Закрыть глаза и немного отдохнуть", next: "sleep" }
-        ]
-      },
-
-      inspect: {
-        title: "Табличка в лифте",
-        text: "На стене есть номер лифта, адрес организации и телефон аварийной службы.\n\nЭти детали сильно ускоряют помощь.",
-        choices: [
-          { text: "Позвонить по номеру с таблички", next: "call" },
-          { text: "Сесть и ждать, соблюдая инструкцию", next: "calm" }
-        ]
-      },
-
-      sleep: {
-        title: "Сон в кабине",
-        text: "От стресса и духоты клонит в сон.\n\nТы думаешь: вздремну, пока ждут. Это опасно: можно пропустить прибытие помощи или хуже перенести ожидание.",
-        choices: [
-          { text: "Решительно взять себя в руки и нажать вызов", next: "call" },
-          { text: "Закрыть глаза и уснуть", next: "risky_sleep" }
-        ]
-      },
-
-      risky_sleep: {
-        title: "Сонливость",
-        ending: {
-          id: "risky_sleep",
-          type: "warning",
-          title: "Тревожная концовка: сонливость",
-          text: "Ты просыпаешься от стука в дверь: спасатели уже рядом.\n\nНо из-за сна ты потерял контроль, время и ясность.\n\nВ реальной ситуации лучше бодрствовать и поддерживать связь."
-        }
-      }
-    };
-
-    const sceneTitle = document.getElementById("sceneTitle");
-    const sceneText = document.getElementById("sceneText");
-    const choicesEl = document.getElementById("choices");
-    const resultBox = document.getElementById("resultBox");
-    const progressBadge = document.getElementById("progressBadge");
-    const stepCounter = document.getElementById("stepCounter");
-    const endingsCount = document.getElementById("endingsCount");
-    const restartBtn = document.getElementById("restartBtn");
-    const copyBtn = document.getElementById("copyBtn");
-    const endingsBtn = document.getElementById("endingsBtn");
-    const toastEl = document.getElementById("toast");
-
-    let toastTimer = null;
-
-    function normalizeState(raw) {
-      const fallback = {
-        scene: "start",
-        steps: 0,
-        endings: []
-      };
-
-      if (!raw || typeof raw !== "object") return fallback;
-
-      const state = {
-        scene: scenes[raw.scene] ? raw.scene : "start",
-        steps: Number.isFinite(raw.steps) && raw.steps >= 0 ? Math.floor(raw.steps) : 0,
-        endings: Array.isArray(raw.endings) ? raw.endings.filter(Boolean) : []
-      };
-
-      return state;
-    }
-
-    function loadState() {
-      try {
-        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        return normalizeState(raw);
-      } catch (error) {
-        return normalizeState(null);
-      }
-    }
-
-    function saveState() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (error) {
-        // Если браузер блокирует localStorage, игра всё равно будет работать без сохранения.
-      }
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function toast(message) {
-      toastEl.textContent = message;
-      toastEl.classList.add("show");
-
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toastEl.classList.remove("show");
-      }, 2300);
-    }
-
-    function markEnding(endingId) {
-      if (!endingId) return;
-
-      if (!state.endings.includes(endingId)) {
-        state.endings.push(endingId);
-        saveState();
-        toast("Новая концовка найдена!");
-      }
-    }
-
-    function getResultText() {
-      const scene = scenes[state.scene];
-
-      if (scene && scene.ending) {
-        return [
-          "Я прошёл интерактив «Ты застрял в лифте» от ВК-лаборатории.",
-          "",
-          "Концовка: " + scene.ending.title,
-          scene.ending.text,
-          "",
-          "Шагов: " + state.steps,
-          "Найдено концовок: " + state.endings.length + "/" + TOTAL_ENDINGS,
-          "Ссылка: " + window.location.href
-        ].join("\n");
-      }
-
-      return [
-        "Я играю в интерактив «Ты застрял в лифте» от ВК-лаборатории.",
-        "",
-        "Текущая сцена: " + (scene && scene.title ? scene.title : "Неизвестно"),
-        scene && scene.text ? scene.text : "",
-        "",
-        "Шагов: " + state.steps,
-        "Найдено концовок: " + state.endings.length + "/" + TOTAL_ENDINGS,
-        "Ссылка: " + window.location.href
-      ].join("\n");
-    }
-
-    async function copyToClipboard(text) {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          toast("Скопировано");
-          return;
-        }
-      } catch (error) {
-        // переходим к запасному способу
-      }
-
-      try {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        textarea.setAttribute("readonly", "");
-        textarea.style.position = "fixed";
-        textarea.style.left = "-9999px";
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-        toast("Скопировано");
-      } catch (error) {
-        toast("Не удалось скопировать");
-      }
-    }
-
-    function choose(nextScene) {
-      if (!scenes[nextScene]) return;
-
-      state.scene = nextScene;
-      state.steps += 1;
-      saveState();
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function restart() {
-      state.scene = "start";
-      state.steps = 0;
-      saveState();
-      render();
-      toast("История начата заново. Найденные концовки сохранены.");
-    }
-
-    function render() {
-      const scene = scenes[state.scene] || scenes.start;
-
-      if (!scenes[state.scene]) {
-        state.scene = "start";
-        state.steps = 0;
-        saveState();
-      }
-
-      sceneTitle.textContent = scene.title || "Сцена";
-      sceneText.textContent = scene.text || "";
-
-      choicesEl.innerHTML = "";
-      resultBox.innerHTML = "";
-
-      if (scene.ending) {
-        markEnding(scene.ending.id);
-
-        progressBadge.textContent = "Финал";
-
-        const result = document.createElement("div");
-        const typeClass =
-          scene.ending.type === "danger"
-            ? "danger"
-            : scene.ending.type === "success"
-              ? ""
-              : "neutral";
-
-        result.className = "result " + typeClass;
-        result.innerHTML =
-          "<h2>" + escapeHtml(scene.ending.title) + "</h2>" +
-          "<p>" + escapeHtml(scene.ending.text) + "</p>";
-
-        resultBox.appendChild(result);
-      } else {
-        progressBadge.textContent = "Шаг " + (state.steps + 1);
-
-        const choices = scene.choices || [];
-
-        choices.forEach((choice) => {
-          const button = document.createElement("button");
-          button.className = "choice";
-          button.type = "button";
-          button.textContent = choice.text;
-          button.addEventListener("click", () => choose(choice.next));
-          choicesEl.appendChild(button);
-        });
-      }
-
-      endingsCount.textContent = state.endings.length;
-      stepCounter.textContent = "Шаг: " + state.steps;
-    }
-
-    restartBtn.addEventListener("click", restart);
-
-    copyBtn.addEventListener("click", () => {
-      copyToClipboard(getResultText());
-    });
-
-    endingsBtn.addEventListener("click", () => {
-      toast("Открыто " + state.endings.length + " из " + TOTAL_ENDINGS + ". Попробуй другие ветки.");
-    });
-
-    let state = loadState();
-    render();
-  </script>
 </body>
 </html>
