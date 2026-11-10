@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оставить заявку на разработку — ВК-лаборатория</title>
+<meta name="description" content="Форма заявки на индивидуальный инструмент для ВК-лаборатории: генератор, скрипт, игра или доработка. Опиши задачу — получишь готовый текст заявки для ЛС ВК или письма. Без регистрации, без оплаты, 0 ₽.">
+<link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/order/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Заявка на разработку">
+<meta property="og:description" content="Опиши задачу → скопируй готовую заявку → отправь в ЛС сообщества или письмом. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/order/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/order/preview-order.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,rgba(34,211,238,.14),transparent 30%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:18px}
+.top{max-width:1100px;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:800;color:var(--accent)}.sub{color:var(--muted);font-size:13px}
+.layout{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.panel h2{margin:0 0 4px;font-size:15px;color:var(--accent2);text-transform:uppercase;letter-spacing:1px}
+.hint{color:var(--muted);font-size:12px;margin:0 0 14px;line-height:1.5}
+.grp{margin-bottom:12px}.grp label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.grp label b{color:var(--danger)}
+input[type=text],input[type=tel],input[type=email],select,textarea{width:100%;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);font:inherit}
+textarea{min-height:120px;resize:vertical;line-height:1.5}
+input.err,textarea.err,select.err{border-color:var(--danger);background:rgba(251,113,133,.08)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:13px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.primary:hover{filter:brightness(1.08)}
+.ghost{padding:11px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+.ghost:disabled{opacity:.4;cursor:not-allowed}
+.small{padding:8px 14px;font-size:12px}
+.pv{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.pv h2{margin:0 0 8px;font-size:15px;color:var(--accent2);text-transform:uppercase;letter-spacing:1px}
+.pv pre{margin:0;background:#0a0f1c;border:1px solid var(--border);border-radius:14px;padding:14px 16px;overflow:auto;font-family:"Cascadia Code",Consolas,Menlo,monospace;font-size:12.5px;line-height:1.6;color:#dbe7ff;white-space:pre-wrap;word-break:break-word;min-height:160px}
+.where{color:var(--muted);font-size:12px;line-height:1.5;margin:10px 0 0}
+.where b{color:var(--accent)}
+.note{color:var(--muted);font-size:12px;text-align:center;max-width:760px;line-height:1.5;margin:16px auto 0}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px;line-height:1.5}
+footer a{color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:820px){.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><div class="brand">ВК-лаборатория · Заказы</div><div class="sub">Заявка на индивидуальный инструмент · 0 ₽ · без регистрации</div></div>
+  <div class="sub"><a class="brand" style="text-decoration:none" href="../cat/orders/">← правила и примеры</a></div>
+</div>
+<div class="layout">
+  <div class="panel">
+    <h2>Что нужно</h2>
+    <p class="hint">Заполни поля — справа соберётся готовый текст заявки. Его можно скопировать в сообщение сообщества ВК или обсуждение рубрики, либо отправить письмом. Обязательные поля отмечены <b>*</b>.</p>
+    <div class="grp"><label>Имя <b>*</b></label><input type="text" id="fName" placeholder="Как к тебе обращаться" autocomplete="name"></div>
+    <div class="grp"><label>Контакт для ответа <b>*</b></label><input type="text" id="fContact" placeholder="Ник ВК, email или телефон"></div>
+    <div class="grp"><label>Тип задачи</label><select id="fType">
+      <option value="Генератор / веб-инструмент по ссылке" selected>Генератор / веб-инструмент</option>
+      <option value="Скрипт / макрос (Windows, Word, Excel, BAS)">Скрипт / макрос</option>
+      <option value="Игра / интерактив / квест">Игра / интерактив / квест</option>
+      <option value="Доработка существующего инструмента">Доработка существующего</option>
+      <option value="Другое (опишу в описании)">Другое</option>
+    </select></div>
+    <div class="grp two">
+      <div><label>Срочность</label><select id="fUrgency">
+        <option value="Не горит" selected>Не горит</option>
+        <option value="В течение месяца">В течение месяца</option>
+        <option value="Нужно быстро">Нужно быстро</option>
+      </select></div>
+      <div><label>Бюджет</label><select id="fBudget">
+        <option value="0 ₽ / в рамках лаборатории" selected>0 ₽ / лаборатория</option>
+        <option value="Обсудим">Обсудим</option>
+        <option value="Есть рамка (укажу сумму)">Есть рамка</option>
+      </select></div>
+    </div>
+    <div class="grp"><label>Сумма, если есть рамка</label><input type="text" id="fSum" placeholder="Напр. до 5000 ₽ (можно пусто)"></div>
+    <div class="grp"><label>Описание задачи <b>*</b></label><textarea id="fDesc" placeholder="Что на входе, что должно получаться на выходе, для кого (ребёнок/класс/офис/сайт). Чем конкретнее — тем быстрее возьму в работу."></textarea></div>
+    <div class="row">
+      <button class="primary" id="btnCopy">📋 Скопировать заявку</button>
+      <button class="ghost" id="btnMail" disabled>✉️ Отправить письмом</button>
+      <button class="ghost" id="btnTopic">💬 Написать в сообщество</button>
+      <button class="ghost small" id="btnClear">Очистить черновик</button>
+    </div>
+  </div>
+  <div class="pv">
+    <h2>Предпросмотр заявки</h2>
+    <pre id="pv"></pre>
+    <p class="where">Куда вставлять скопированное: <b>сообщение сообщества</b> <a href="https://vk.ru/vklaboratory1" target="_blank" rel="noopener">vk.ru/vklaboratory1</a> или <b>обсуждение рубрики «Заказы»</b>. Черновик автосохраняется в этом браузере — можно закрыть и вернуться.</p>
+  </div>
+</div>
+<p class="note">Форма работает без сервера: заявка собирается в текст и уходит тебе через ЛС ВК, обсуждение или письмо. Никакой оплаты, регистрации и отправки данных третьим лицам — всё остаётся в твоём браузере до момента копирования.</p>
+<footer>ВК-лаборатория · <a href="../">каталог</a> · <a href="../cat/orders/">правила заказов</a> · 0 ₽</footer>
+<div class="toast" id="toast"></div>
+<script>
+/* ORDER-FORM-START */
+// Задай личный email ниже, если хочешь приём заявок письмом (mailto).
+// Пустая строка = кнопка «письмом» выключена, приём только через ЛС ВК/обсуждение.
+// Рабочий общий ящик организации сюда НЕ вписывай — будет спам и чужие письма.
+var ORDER_EMAIL="";
+var GROUP_URL="https://vk.ru/vklaboratory1";
+var KEY="vklab_order_draft_v1";
+var $=function(id){return document.getElementById(id);};
+var fields=["fName","fContact","fType","fUrgency","fBudget","fSum","fDesc"];
+var required=["fName","fContact","fDesc"];
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(function(){t.classList.remove("show");},2400);}
+function get(id){var e=$(id);return e?e.value.trim():"";}
+function buildText(){
+  var sum=get("fSum");
+  var budget=get("fBudget");
+  if(budget==="Есть рамка (укажу сумму)"&&sum)budget="Есть рамка: "+sum;
+  return "ЗАЯВКА В ВК-ЛАБОРАТОРИЮ\n"+
+    "Имя: "+(get("fName")||"—")+"\n"+
+    "Контакт: "+(get("fContact")||"—")+"\n"+
+    "Тип: "+get("fType")+"\n"+
+    "Срочность: "+get("fUrgency")+"\n"+
+    "Бюджет: "+budget+"\n"+
+    "Описание:\n"+(get("fDesc")||"—");
+}
+function renderPreview(){$("pv").textContent=buildText();}
+function markErr(){
+  var ok=true;
+  required.forEach(function(id){
+    var e=$(id);if(!e)return;
+    if(!e.value.trim()){e.classList.add("err");ok=false;}else e.classList.remove("err");
+  });
+  return ok;
+}
+function copyText(t){
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(t).then(function(){toast("Заявка скопирована — вставь в ЛС сообщества или обсуждение.");},function(){fallback(t);});
+  }else fallback(t);
+}
+function fallback(t){
+  try{var ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Заявка скопирована — вставь в ЛС сообщества или обсуждение.");}
+  catch(e){toast("Не удалось скопировать — выдели текст предпросмотра вручную.");}
+}
+function saveDraft(){
+  try{var d={};fields.forEach(function(id){d[id]=$(id).value;});localStorage.setItem(KEY,JSON.stringify(d));}catch(e){}
+}
+function restoreDraft(){
+  try{var d=JSON.parse(localStorage.getItem(KEY));if(!d)return;fields.forEach(function(id){if(d[id]!=null&&$(id))$(id).value=d[id];});}catch(e){}
+}
+function clearDraft(){
+  try{localStorage.removeItem(KEY);}catch(e){}
+  fields.forEach(function(id){var e=$(id);if(e){e.value=e.tagName==="SELECT"?e.options[0].value:"";e.classList.remove("err");}});
+  renderPreview();toast("Черновик очищен.");
+}
+function setupMail(){
+  var b=$("btnMail");
+  if(ORDER_EMAIL){b.disabled=false;b.onclick=function(){
+    if(!markErr()){toast("Сначала заполни имя, контакт и описание.");return;}
+    var sub="Заявка в ВК-лабораторию от "+(get("fName")||"гостя");
+    window.location.href="mailto:"+ORDER_EMAIL+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(buildText());
+  };}
+  else{b.disabled=true;b.title="Задай ORDER_EMAIL в коде страницы, чтобы включать приём на почту.";b.onclick=function(){toast("Приём на почту выключен. Используй «Скопировать заявку» → ЛС ВК.");};}
+}
+$("btnCopy").addEventListener("click",function(){
+  if(!markErr()){toast("Заполни обязательные поля: имя, контакт, описание.");return;}
+  copyText(buildText());
+});
+$("btnTopic").addEventListener("click",function(){window.open(GROUP_URL,"_blank","noopener");});
+$("btnClear").addEventListener("click",clearDraft);
+var saveTimer=null;
+fields.forEach(function(id){var e=$(id);if(!e)return;
+  e.addEventListener("input",function(){renderPreview();clearTimeout(saveTimer);saveTimer=setTimeout(saveDraft,400);});
+  e.addEventListener("change",function(){renderPreview();saveDraft();});
+  e.addEventListener("blur",function(){if(e.value.trim())e.classList.remove("err");});
+});
+restoreDraft();
+renderPreview();
+setupMail();
+/* ORDER-FORM-END */
+</script>
+</body>
+</html>
