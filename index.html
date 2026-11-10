@@ -81,6 +81,9 @@
       elevator:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="74" y="14" width="52" height="92" rx="3" fill="none" stroke="#46557d" stroke-width="2"/><rect x="76" y="16" width="24" height="88" fill="#28324c"/><rect x="100" y="16" width="24" height="88" fill="#28324c"/><line x1="100" y1="18" x2="100" y2="102" stroke="#0c1120" stroke-width="2"/><circle cx="100" cy="22" r="3" fill="#ffe9a8"/><circle cx="100" cy="56" r="5" fill="#cfe9ff"/><path d="M95 62 Q100 60 105 62 L106 84 Q100 87 94 84 Z" fill="#cfe9ff"/></svg>',
       lines:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="64" y="10" width="72" height="100" rx="2" fill="#fff"/><line x1="78" y1="10" x2="78" y2="110" stroke="#f0a6b6" stroke-width="1.2"/><g stroke="#aeb8cc" stroke-width=".7"><line x1="78" y1="30" x2="132" y2="30"/><line x1="78" y1="46" x2="132" y2="46"/><line x1="78" y1="62" x2="132" y2="62"/><line x1="78" y1="78" x2="132" y2="78"/><line x1="78" y1="94" x2="132" y2="94"/><line x1="96" y1="30" x2="96" y2="94"/><line x1="114" y1="30" x2="114" y2="94"/></g><g stroke="#6f9fd8" stroke-width=".9"><line x1="78" y1="46" x2="96" y2="30"/><line x1="96" y1="62" x2="114" y2="46"/></g></svg>',
       skeleton:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><ellipse cx="100" cy="40" rx="12" ry="13" fill="#e2e8f0"/><circle cx="95" cy="39" r="3" fill="#a3e635"/><circle cx="105" cy="39" r="3" fill="#a3e635"/><g stroke="#e2e8f0" stroke-width="2.4" stroke-linecap="round"><line x1="100" y1="53" x2="100" y2="78"/><line x1="92" y1="58" x2="108" y2="58"/><line x1="92" y1="64" x2="108" y2="64"/><line x1="92" y1="70" x2="108" y2="70"/><line x1="92" y1="56" x2="84" y2="68"/><line x1="108" y1="56" x2="116" y2="68"/><line x1="96" y1="78" x2="93" y2="98"/><line x1="104" y1="78" x2="107" y2="98"/></g><ellipse cx="100" cy="104" rx="60" ry="8" fill="#4c1d95" opacity=".4"/></svg>',
+      examples:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="58" y="12" width="84" height="96" rx="3" fill="#fff"/><g fill="#33415c" font-family="Georgia,serif" font-size="9"><text x="66" y="34">7 + 5 =</text><text x="66" y="52">9 - 3 =</text><text x="66" y="70">4 + 6 =</text><text x="110" y="34">8 - 2 =</text><text x="110" y="52">6 + 4 =</text><text x="110" y="70">5 + 5 =</text></g><line x1="66" y1="86" x2="134" y2="86" stroke="#a3e635" stroke-width="1.5"/></svg>',
+      random:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><circle cx="100" cy="58" r="30" fill="none" stroke="#22d3ee" stroke-width="2.5"/><circle cx="100" cy="58" r="30" fill="none" stroke="#a3e635" stroke-width="2.5" stroke-dasharray="6 8"/><g fill="#e2e8f0"><circle cx="92" cy="50" r="3"/><circle cx="108" cy="50" r="3"/><circle cx="100" cy="58" r="3"/><circle cx="92" cy="66" r="3"/><circle cx="108" cy="66" r="3"/></g><path d="M100 22 l5 8 h-10 z" fill="#fb7185"/></svg>',
+      tempclean:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><path d="M82 38 h36 l-3 50 a4 4 0 0 1 -4 4 h-22 a4 4 0 0 1 -4 -4 z" fill="none" stroke="#e2e8f0" stroke-width="2.5"/><line x1="78" y1="38" x2="122" y2="38" stroke="#e2e8f0" stroke-width="2.5"/><path d="M92 38 v-5 a4 4 0 0 1 4 -4 h8 a4 4 0 0 1 4 4 v5" fill="none" stroke="#e2e8f0" stroke-width="2.5"/><g stroke="#22d3ee" stroke-width="2"><line x1="94" y1="50" x2="94" y2="82"/><line x1="100" y1="50" x2="100" y2="82"/><line x1="106" y1="50" x2="106" y2="82"/></g><circle cx="128" cy="34" r="3" fill="#a3e635"/><circle cx="134" cy="44" r="2" fill="#a3e635"/></svg>',
       ghost:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><circle cx="100" cy="56" r="22" fill="none" stroke="#3c4a6e" stroke-width="2" stroke-dasharray="4 4"/><text x="100" y="62" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="20" fill="#3c4a6e">+</text></svg>'
     };
     const CAT={
@@ -88,14 +91,21 @@
         {href:"elevator/",kicker:"Интерактив · мини-мультик",title:"Ты застрял в лифте",desc:"Здание с окнами, едущая кабина, 7 концовок, прогресс сохраняется.",go:"Играть →",thumb:"elevator"},
         {href:"skeleton/",kicker:"Аркада · реакция",title:"Скелеты из тумана",desc:"Тапай по скелетам, пока не встали. 3 жизни, скорость растёт, рекорд.",go:"Играть →",thumb:"skeleton"}
       ],
-      school:[{href:"lines/",kicker:"Генератор · печать/PDF",title:"Разлиновка А4",desc:"Клетка 5/7/8 мм, косая, парадная, секретные линии, шапка с именем.",go:"Открыть →",thumb:"lines"}],
-      scripts:[],
-      generators:[],
+      school:[
+        {href:"lines/",kicker:"Генератор · печать/PDF",title:"Разлиновка А4",desc:"Клетка 5/7/8 мм, косая, парадная, секретные линии, шапка с именем.",go:"Открыть →",thumb:"lines"},
+        {href:"examples/",kicker:"Генератор · печать/PDF",title:"Примеры 1 класс",desc:"Сложение и вычитание в пределах 10/20, режим ученик/учитель.",go:"Открыть →",thumb:"examples"}
+      ],
+      scripts:[
+        {href:"tempclean/",kicker:"Windows · batch",title:"Очистка temp",desc:"Готовый .bat с подтверждением и разбором каждой строки. Скачать кликом.",go:"Открыть →",thumb:"tempclean"}
+      ],
+      generators:[
+        {href:"random/",kicker:"Инструмент · жребий",title:"Случайный выбор",desc:"Список имён → барабан → победитель или перемешанный порядок. История.",go:"Открыть →",thumb:"random"}
+      ],
       orders:[]
     };
     const SOON={
-      scripts:"Скоро: команды Windows, макросы Word/Excel, BAS — с исходником и разбором «как я это сделал».",
-      generators:"Скоро: веб-инструменты по ссылке — калькуляторы, тесты, конвертеры, без установки.",
+      scripts:"Скоро: макросы Word/Excel (уборка текста, сравнение списков), BAS — с исходником и разбором.",
+      generators:"Скоро: генератор паролей, таймер/секундомер, конвертеры — без установки.",
       orders:"Здесь будут индивидуальные разработки под вашу задачу. Хотите — напишите в обсуждение рубрики."
     };
     const deck=document.getElementById("deck"),tabs=document.getElementById("tabs");
