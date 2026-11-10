@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Макрос Word «уборка текста» — убрать пробелы и пустые строки (VBA) — ВК-лаборатория</title>
+<meta name="description" content="Бесплатный VBA-макрос для Word: убирает лишние пробелы, пустые абзацы, неразрывные пробелы и пробелы перед знаками препинания в один запуск. Код + построчный разбор + пошаговая инструкция для новичка. Без установки, 0 ₽.">
+<link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/wordclean/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Макрос Word: уборка текста (VBA)">
+<meta property="og:description" content="Лишние пробелы, пустые абзацы, неразрывные, пробелы перед запятой — в один клик. Разбор + инструкция для новичка. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/wordclean/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/wordclean/preview-wordclean.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 18% 12%,rgba(163,230,53,.12),transparent 32%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:18px}
+.wrap{max-width:880px;margin:0 auto}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.brand{font-weight:800;color:var(--accent)}.sub{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;box-shadow:0 18px 50px rgba(0,0,0,.4);margin-bottom:16px;backdrop-filter:blur(10px)}
+h1{font-size:clamp(22px,5vw,32px);margin:0 0 8px}
+p.lead{color:var(--muted);line-height:1.6;margin:0 0 4px}
+.warn{border:1px solid rgba(251,113,133,.3);background:rgba(251,113,133,.08);border-radius:14px;padding:12px 14px;color:#fecdd3;font-size:13px;line-height:1.5;margin:12px 0}
+.warn b{color:#fff}
+.steps{counter-reset:s;margin:0 0 4px;padding:0;list-style:none}
+.steps li{position:relative;padding:8px 0 8px 38px;color:var(--muted);font-size:14px;line-height:1.5;border-bottom:1px solid var(--border)}
+.steps li:last-child{border-bottom:0}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:8px;width:26px;height:26px;border-radius:50%;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+.steps li b{color:var(--text)}
+.steps code{background:rgba(34,211,238,.1);color:var(--accent);padding:1px 5px;border-radius:6px;font-family:Consolas,monospace;font-size:12px}
+pre{margin:0;background:#0a0f1c;border:1px solid var(--border);border-radius:14px;padding:14px 16px;overflow:auto;font-family:"Cascadia Code",Consolas,Menlo,monospace;font-size:12.5px;line-height:1.55;color:#dbe7ff;white-space:pre}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:11px}
+td code{background:rgba(34,211,238,.1);color:var(--accent);padding:1px 5px;border-radius:6px;font-family:Consolas,monospace;font-size:12px}
+td.r{color:var(--muted);line-height:1.5}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.primary:hover{filter:brightness(1.08)}
+.ghost{padding:11px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:8px;line-height:1.5}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><div><div class="brand">ВК-лаборатория · Скрипты</div><div class="sub">Word · VBA · уборка текста · 0 ₽</div></div></div>
+
+  <div class="card">
+    <h1>🧹 Макрос Word «уборка текста» (CleanText)</h1>
+    <p class="lead">Текст, скопированный из интернета или PDF, всегда мусор: двойные пробелы, пустые абзацы-простыни, неразрывные пробелы, пробел перед запятой. Этот макрос чистит всё это в один запуск. Для новичка главное — не бояться: ниже пошаговая инструкция «куда нажать», и макрос работает на открытом документе, отменяется через Ctrl+Z (частично), поэтому <b>сначала сохрани копию</b>.</p>
+    <div class="warn"><b>Безопасно, но на копии.</b> Макрос меняет текст в текущем документе. Сделай «Сохранить как» копии перед запуском, или работай в новом документе. Ctrl+Z отменит часть правок, но не все замены Find — поэтому копия = твоя страховка, и это нормальная гигиена любого макроса.</div>
+    <pre id="code"></pre>
+    <div class="row">
+      <button class="primary" id="copyBtn">📋 Копировать код (вставить в модуль)</button>
+      <button class="ghost" id="dlBtn">Скачать wordclean.txt</button>
+      <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h1 style="font-size:20px">Пошагово для человека без программирования</h1>
+    <ol class="steps">
+      <li>Открой документ в Word. Нажми <code>Alt + F11</code> — откроется редактор VBA (отдельное окно).</li>
+      <li>В редакторе: меню <b>Insert → Module</b>. Появится пустой белый лист-модуль.</li>
+      <li>Нажми кнопку <b>«Копировать код»</b> выше, затем вставь в модуль (<code>Ctrl + V</code>). Кириллица в сообщениях сохранится — буфер обмена Unicode.</li>
+      <li>Закрой окно VBA (крестик или <code>Alt + Q</code>) — вернёшься в Word.</li>
+      <li>Нажми <code>Alt + F8</code>, выбери <b>CleanText</b>, жми <b>Run</b>. Готово — текст чистый, появится сообщение со счётчиком.</li>
+      <li>Дальше можешь запускатьmacro через <code>Alt + F8</code> или привязать к кнопке на ленте (File → Options → Customize Ribbon → Macros). Сохраняй документ как <code>.docm</code>, если хочешь, чтобы макрос остался в файле.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h1 style="font-size:20px">Разбор по строкам — «как я это сделал»</h1>
+    <table>
+      <tr><th>Блок кода</th><th>Что делает</th></tr>
+      <tr><td><code>ScreenUpdating = False</code></td><td class="r">Выключает перерисовку экрана на время замены — макрос летает вместо медленной прокрутки. В конце включаем обратно.</td></tr>
+      <tr><td><code>With .Find … .Replacement</code></td><td class="r">Настраиваем поиск и замену: что искать (<code>.Text</code>) и на что менять (<code>.Replacement.Text</code>), без форматирования и джокеров.</td></tr>
+      <tr><td><code>.Text = "^s" → " "</code></td><td class="r">Неразрывный пробел (из PDF/веба) превращается в обычный — иначе Word не переносит строку и «съезжает» вёрстка.</td></tr>
+      <tr><td><code>Do While .Execute</code> для <code>"  "</code></td><td class="r">Схлопывает двойные/тройные пробелы в один: крутим, пока Find находит, — за один проход «3 пробела» не схлопнутся полностью.</td></tr>
+      <tr><td><code>"^p^p" → "^p"</code></td><td class="r">Убирает пустые абзацы-простыни между параграфами (тоже циклом, пока найдено).</td></tr>
+      <tr><td><code>" ," → ","</code> и т.д.</td><td class="r">Снимает пробел перед знаками препинания — классический мусор после вставки из веба.</td></tr>
+      <tr><td><code>" ^p" / "^p "</code></td><td class="r">Убирает висячие пробелы в конце и начале абзаца.</td></tr>
+      <tr><td><code>MsgBox …</code></td><td class="r">По-русски сообщает, что готово, и сколько замен сделано по каждому типу — новичок видит результат, а не гадает.</td></tr>
+    </table>
+    <p class="lead" style="margin-top:12px">Почему циклы <code>Do While</code>, а не одна замена: Find меняет первое вхождение за вызов; чтобы схлопнуть «a&nbsp;&nbsp;&nbsp;b» в «a b», надо крутить, пока находятся двойные. Поэтому каждый тип обёрнут в цикл, а счётчики копятся в переменных — их и печатает MsgBox.</p>
+  </div>
+
+  <footer>ВК-лаборатория · макрос открыт, можно читать и править под себя · 0 ₽</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const VBA=[
+"' CleanText — уборка текста в Word (ВК-лаборатория, 0 руб.)",
+"' Вставь в Module (Alt+F11 -> Insert -> Module), запуск: Alt+F8 -> CleanText -> Run",
+"Sub CleanText()",
+"    Dim nBS As Long, nBlank As Long, nNB As Long, nPunc As Long, nEdge As Long",
+"    Dim f As Find",
+"    Application.ScreenUpdating = False",
+"    Set f = Selection.Find",
+"    With f",
+"        .ClearFormatting",
+"        .Replacement.ClearFormatting",
+"        .MatchCase = False",
+"        .MatchWholeWord = False",
+"        .MatchWildcards = False",
+"        .MatchSoundsLike = False",
+"        .MatchAllWordForms = False",
+"        .Forward = True",
+"        .Wrap = wdFindContinue",
+"        .Format = False",
+"    End With",
+"    ' 1) неразрывные пробелы -> обычные",
+"    With f",
+"        .Text = "^s'",
+"        .Replacement.Text = \" \"",
+"        nNB = 0",
+"        Do While .Execute(Replace:=wdReplaceAll)",
+"            nNB = nNB + 1",
+"            If nNB > 5000 Then Exit Do",
+"        Loop",
+"    End With",
+"    ' 2) схлопнуть множественные пробелы в один",
+"    With f",
+"        .Text = \"  \"",
+"        .Replacement.Text = \" \"",
+"        nBS = 0",
+"        Do While .Execute(Replace:=wdReplaceAll)",
+"            nBS = nBS + 1",
+"            If nBS > 5000 Then Exit Do",
+"        Loop",
+"    End With",
+"    ' 3) убрать пустые абзацы",
+"    With f",
+"        .Text = \"^p^p\"",
+"        .Replacement.Text = \"^p\"",
+"        nBlank = 0",
+"        Do While .Execute(Replace:=wdReplaceAll)",
+"            nBlank = nBlank + 1",
+"            If nBlank > 5000 Then Exit Do",
+"        Loop",
+"    End With",
+"    ' 4) пробелы перед знаками препинания",
+"    Dim pairs, i",
+"    pairs = Array(\" ,\", \".\", \" ;\", \":\", \" !\", \"!\", \" ?\", \"?\")",
+"    nPunc = 0",
+"    For i = 0 To UBound(pairs) Step 2",
+"        With f",
+"            .Text = pairs(i)",
+"            .Replacement.Text = pairs(i + 1)",
+"            Do While .Execute(Replace:=wdReplaceAll)",
+"                nPunc = nPunc + 1",
+"                If nPunc > 5000 Then Exit Do",
+"            Loop",
+"        End With",
+"    Next i",
+"    ' 5) висячие пробелы по краям абзаца",
+"    With f",
+"        .Text = \" ^p\"",
+"        .Replacement.Text = \"^p\"",
+"        nEdge = 0",
+"        Do While .Execute(Replace:=wdReplaceAll)",
+"            nEdge = nEdge + 1",
+"            If nEdge > 5000 Then Exit Do",
+"        Loop",
+"        .Text = \"^p \"",
+"        .Replacement.Text = \"^p\"",
+"        Do While .Execute(Replace:=wdReplaceAll)",
+"            nEdge = nEdge + 1",
+"            If nEdge > 5000 Then Exit Do",
+"        Loop",
+"    End With",
+"    Application.ScreenUpdating = True",
+"    MsgBox \"Готово!\" & vbCrLf & _",
+"           \"Неразрывные -> обычные: \" & nNB & vbCrLf & _",
+"           \"Лишние пробелы схлопнуты: \" & nBS & vbCrLf & _",
+"           \"Пустые абзацы убраны: \" & nBlank & vbCrLf & _",
+"           \"Пробелы перед знаками: \" & nPunc & vbCrLf & _",
+"           \"Висячие по краям: \" & nEdge, vbInformation, \"CleanText\"",
+"End Sub"
+].join("\r\n");
+const $=id=>document.getElementById(id);
+$("code").textContent=VBA;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2300);}
+$("copyBtn").addEventListener("click",async()=>{
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(VBA);toast("Код скопирован — вставь в модуль VBA (Ctrl+V).");return;}}catch(e){}
+  try{const ta=document.createElement("textarea");ta.value=VBA;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Код скопирован — вставь в модуль VBA (Ctrl+V).");}catch(e){toast("Не удалось скопировать — скачай .txt.");}
+});
+$("dlBtn").addEventListener("click",()=>{
+  try{
+    const blob=new Blob([VBA],{type:"text/plain;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="wordclean.txt";
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    toast("wordclean.txt скачан — открой в Блокноте, скопируй и вставь в модуль.");
+  }catch(e){toast("Не удалось скачать — жми «Копировать код».");}
+});
+$("shareBtn").addEventListener("click",()=>{const t="Макрос Word «уборка текста» (VBA) с разбором по строкам и инструкцией для новичка — ВК-лаборатория";window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");});
+</script>
+</body>
+</html>
