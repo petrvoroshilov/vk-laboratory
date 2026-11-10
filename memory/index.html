@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory — игра на память «найди пары» | ВК-лаборатория</title>
+<meta name="description" content="Бесплатная игра Memory на тренажёр памяти: переворачивай карты и находи пары, меньше ходов — лучше рекорд. Звук включаемый, работает на телефоне. Без установки, 0 ₽.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Memory: найди пары карт">
+<meta property="og:description" content="Тренажёр памяти: ищи пары, считай ходы, бей рекорд. Звук on/off, 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/memory/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/memory/preview-memory.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 12%,rgba(34,211,238,.16),transparent 32%),radial-gradient(circle at 82% 80%,rgba(163,230,53,.12),transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.app{width:min(560px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(10px)}
+header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:800;color:var(--accent)}.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 11px;border-radius:999px}
+main{padding:16px 18px 20px}
+.bar{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:12px}
+.bar b{color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.card{aspect-ratio:3/4;border-radius:14px;perspective:600px;cursor:pointer;touch-action:manipulation}
+.inner{position:relative;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.card.up .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;font-size:clamp(22px,7vw,34px);border:1px solid var(--border)}
+.back{background:linear-gradient(135deg,#1c2740,#0a0f1c);color:var(--accent)}
+.back::after{content:"?";font-weight:800;opacity:.6}
+.front{background:#0f172a;transform:rotateY(180deg)}
+.card.done{cursor:default;opacity:.85}
+.card.done .front{border-color:rgba(163,230,53,.5);box-shadow:0 0 0 2px rgba(163,230,53,.25) inset}
+.card.shake{animation:sh .3s}
+@keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.finish{text-align:center;padding:8px 0}
+.finish .big{font-size:34px;font-weight:800;color:#fff;margin:4px 0}
+.finish p{color:var(--muted);line-height:1.6;margin:4px 0}
+.controls{display:flex;flex-wrap:wrap;gap:10px;padding:0 18px 16px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:11px 18px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.ghost{padding:10px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+footer{padding:12px 18px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;line-height:1.4}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">ВК-лаборатория · Игры</div><div class="badge" id="bestBadge">Рекорд —</div></header>
+<main>
+  <div class="bar"><span>Ходы: <b id="moves">0</b></span><span>Пары: <b id="pairs">0</b>/8</span></div>
+  <div class="grid" id="grid"></div>
+  <div class="finish" id="fin" style="display:none">
+    <div class="big" id="fmove">0 ходов</div>
+    <p id="fnote"></p>
+  </div>
+</main>
+<div class="controls">
+  <button class="primary" id="newBtn">Новая игра</button>
+  <button class="ghost" id="muteBtn">🔊 Звук вкл</button>
+  <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+</div>
+<footer>Memory тренирует зрительную память и концентрацию. Меньше ходов — лучше результат. 0 ₽, код открыт.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY="vklab_memory_v1";
+const EMO=["🍎","🚗","🐱","🌞","🎈","🍕","⚽","🚀","🐸","🎁","🍦","🌈"];
+const $=id=>document.getElementById(id);
+let first=null,lock=false,moves=0,found=0,best=0,MUTE=false,AC=null,cur=[];
+try{best=parseInt(localStorage.getItem(KEY+"_best"),10)||0;MUTE=localStorage.getItem(KEY+"_m")==="1";}catch(e){}
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();return AC;}
+function tone(f,d,t){if(MUTE)return;try{const a=ac(),o=a.createOscillator(),g=a.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(a.destination);const n=a.currentTime;o.start(n);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.stop(n+d);}catch(e){}}
+function flipS(){tone(520,.08,"triangle");}
+function matchS(){tone(660,.1,"triangle");setTimeout(()=>tone(990,.12,"triangle"),80);}
+function missS(){tone(200,.16,"sawtooth");}
+function winS(){[523,659,784,1046,1318].forEach((f,i)=>setTimeout(()=>tone(f,.16,"triangle"),i*110));}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2200);}
+function updMute(){$("muteBtn").textContent=MUTE?"🔇 Звук выкл":"🔊 Звук вкл";}
+function updBest(){$("bestBadge").textContent=best?("Рекорд "+best+" ход."):"Рекорд —";}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function newGame(){
+  const picks=shuffle(EMO.slice()).slice(0,8);
+  cur=shuffle(picks.concat(picks));
+  first=null;lock=false;moves=0;found=0;
+  $("moves").textContent=0;$("pairs").textContent=0;
+  $("fin").style.display="none";$("grid").style.display="grid";
+  const g=$("grid");g.innerHTML="";
+  cur.forEach((sym,i)=>{
+    const c=document.createElement("div");c.className="card";c.dataset.i=i;
+    c.innerHTML='<div class="inner"><div class="face back"></div><div class="face front">'+sym+'</div></div>';
+    c.addEventListener("click",()=>tap(c));
+    g.appendChild(c);
+  });
+  try{ac().resume();}catch(e){}
+}
+function tap(c){
+  if(lock||c.classList.contains("up")||c.classList.contains("done"))return;
+  c.classList.add("up");flipS();
+  if(!first){first=c;return;}
+  moves++;$("moves").textContent=moves;
+  const a=first,b=c;first=null;
+  if(cur[+a.dataset.i]===cur[+b.dataset.i]){
+    lock=true;found++;$("pairs").textContent=found;
+    setTimeout(()=>{a.classList.add("done");b.classList.add("done");matchS();lock=false;if(found===8)win();},360);
+  }else{
+    lock=true;missS();a.classList.add("shake");b.classList.add("shake");
+    setTimeout(()=>{a.classList.remove("up","shake");b.classList.remove("up","shake");lock=false;},750);
+  }
+}
+function win(){
+  winS();$("grid").style.display="none";$("fin").style.display="block";
+  $("fmove").textContent=moves+" ходов";
+  let note="";
+  if(!best||moves<best){best=moves;try{localStorage.setItem(KEY+"_best",String(best));}catch(e){}note="Новый рекорд! ";updBest();}
+  else note="Рекорд: "+best+" ходов. ";
+  $("fnote").textContent=note+(moves<=18?"Отличная память!":moves<=26?"Хороший результат.":"Ещё разок — станет меньше ходов.");
+  toast("Все пары найдены за "+moves+" ходов!");
+}
+function share(){const t="Memory: собрал все пары за "+moves+" ходов · ВК-лаборатория";window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");}
+$("newBtn").addEventListener("click",newGame);
+$("muteBtn").addEventListener("click",()=>{MUTE=!MUTE;try{localStorage.setItem(KEY+"_m",MUTE?"1":"0");}catch(e){}updMute();if(!MUTE)flipS();});
+$("shareBtn").addEventListener("click",share);
+updMute();updBest();newGame();
+</script>
+</body>
+</html>
