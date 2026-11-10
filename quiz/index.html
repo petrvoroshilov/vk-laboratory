@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Интерактивный тест ПДД и безопасность для детей — ВК-лаборатория</title>
+<meta name="description" content="Бесплатный интерактивный тест «ПДД пешехода и ЧС в здании» для 1–4 класса: вопрос → 3 варианта → объяснение после каждого ответа, счёт и рекорд. Звук включаемый. Без установки, 0 ₽.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Тест ПДД и безопасность — интерактив">
+<meta property="og:description" content="Вопросы с объяснением после каждого ответа: пешеходу и при ЧС. Счёт, рекорд, звук on/off. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/quiz/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/quiz/preview-quiz.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 12%,rgba(34,211,238,.16),transparent 32%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.app{width:min(640px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(10px)}
+header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:800;color:var(--accent)}.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 11px;border-radius:999px}
+main{padding:18px 20px 22px}
+.bar{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:12px}
+.bar b{color:var(--text)}
+.prog{height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:16px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .3s}
+.q{font-size:18px;line-height:1.5;margin:0 0 16px;font-weight:600}
+.opts{display:grid;gap:10px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.opt{text-align:left;padding:13px 16px;border-radius:14px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);transition:transform .12s,background .12s,border-color .12s}
+.opt:hover:not(:disabled){background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.45);transform:translateY(-1px)}
+.opt:disabled{cursor:default}
+.opt.right{background:rgba(163,230,53,.16);border-color:rgba(163,230,53,.5)}
+.opt.wrong{background:rgba(251,113,133,.16);border-color:rgba(251,113,133,.5)}
+.why{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);font-size:14px;line-height:1.5;display:none}
+.why.show{display:block}
+.why b{color:var(--accent2)}
+.next{margin-top:14px;padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;display:none}
+.next.show{display:inline-block}
+.finish{text-align:center;padding:10px 0}
+.finish .big{font-size:40px;font-weight:800;color:#fff;margin:6px 0}
+.finish p{color:var(--muted);line-height:1.6;margin:6px 0}
+.missed{text-align:left;margin-top:14px;display:grid;gap:8px}
+.missed .m{padding:10px 12px;border-radius:12px;background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.25);font-size:13px;line-height:1.5}
+.missed .m b{color:#fecdd3}
+.controls{display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 16px}
+.ghost{padding:10px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+footer{padding:12px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;line-height:1.4}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">ВК-лаборатория · Школа</div><div class="badge" id="recBadge">Рекорд 0/0</div></header>
+<main>
+  <div id="play">
+    <div class="bar"><span>Вопрос <b id="qnum">1</b> / <b id="qtot">10</b></span><span>Верно: <b id="score">0</b></span></div>
+    <div class="prog"><i id="prog"></i></div>
+    <p class="q" id="qtext"></p>
+    <div class="opts" id="opts"></div>
+    <div class="why" id="why"></div>
+    <button class="next" id="nextBtn">Далее →</button>
+  </div>
+  <div id="fin" class="finish" style="display:none">
+    <div class="sk" style="color:var(--accent2);font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:700">Результат</div>
+    <div class="big" id="fscore">0/10</div>
+    <p id="fnote"></p>
+    <div class="missed" id="missed"></div>
+  </div>
+</main>
+<div class="controls">
+  <button class="ghost" id="restartBtn">Начать заново</button>
+  <button class="ghost" id="muteBtn">🔊 Звук вкл</button>
+  <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+</div>
+<footer>Это учебный тест, а не официальная инструкция ПДД. В реальной опасности звони 112.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY="vklab_quiz_v1";
+const BANK=[
+{q:"Ты переходишь дорогу. Зелёный мигает — что делать?",o:["Бежать, пока горит","Не начинать переход, ждать下一个 зелёный","Идти медленно, не смотря по сторонам"],c:1,w:"Мигающий зелёный = «не начинай». Если уже на середине — дойди быстро, но не стартуй заново."},
+{q:"Где safest всего переходить дорогу без светофора?",o:["Наискосок к нужному дому","На пешеходном переходе «зебра»","Там, где нет машин"],c:1,w:"Переход «зебра» виден водителям. Косой переход прячет тебя от потока."},
+{q:"Почему ночью носят световозвращатели (фликеры)?",o:["Это красиво","Чтобы водитель заметил тебя издалека","Чтобы было теплее"],c:1,w:"Фликер светится в фарах за десятки метров — водитель успевает затормозить."},
+{q:"Ты в здании, началась пожарная тревога. Первое действие?",o:["Спрятаться в шкаф","Выйти по лестнице, не на лифте","Собрать вещи и искать сумку"],c:1,w:"При пожаре лифт отключают и он становится ловушкой. Только лестница, без паники и вещей."},
+{q:"Сильное задымление в коридоре. Как двигаться?",o:["Бежать в полный рост","Пригнуться и идти вдоль стены к выходу","Открыть все окна на ходу"],c:1,w:"Внизу воздуха больше. Пригнувшись, меньше вдыхаешь дыма; стены помогают не потеряться."},
+{q:"Услышал сигнал «Внимание всем» (сирены). Что это?",o:["Учение в школе","Оповещение о ЧС — включить ТВ/радио/телефон","Кто-то шутит"],c:1,w:"Сирены = тревога. Нужно включить официальные источники и слушать инструкции."},
+{q:"Ты потерялся в торговом центре. Что делать первым?",o:["Бегать и искать маму самому","Остаться на месте и обратиться к сотруднику с бейджем","Спрятаться в примерочной"],c:1,w:"Родители вернутся туда, где ты был. Сотрудник с бейджем поможет связаться."},
+{q:"Незнакомец предлагает довести до дома за конфету. Ответ?",o:["Согласиться, он вежливый","Отказать и уйти к людям/в магазин","Согласиться, если быстро"],c:1,w:"Никогда не садись к незнакомцам. Уходи туда, где люди и камеры."},
+{q:"Горит сковорода на плите. Правильно?",o:["Лить воду","Накрыть крышкой/тканью и выключить газ","Вынести на балкон"],c:1,w:"Вода на масле = вспышка. Крышка перекрывает кислород, газ выключить."},
+{q:"Ты один дома, стучат в дверь, говорят «полиция, открой». Действие?",o:["Открыть сразу","Не открывать, позвонить родителям/112 и спросить через дверь","Открыть на цепочку"],c:1,w:"Никому не открывай без подтверждения. Позвони близким и в 112, говори через закрытую дверь."}
+];
+const $=id=>document.getElementById(id);
+let idx=0,score=0,answered=false,missed=[],rec=0,MUTE=false,AC=null;
+try{rec=parseInt(localStorage.getItem(KEY+"_rec"),10)||0;MUTE=localStorage.getItem(KEY+"_m")==="1";}catch(e){}
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();return AC;}
+function tone(f,d,t){if(MUTE)return;try{const a=ac(),o=a.createOscillator(),g=a.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(a.destination);const n=a.currentTime;o.start(n);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.stop(n+d);}catch(e){}}
+function good(){tone(660,.12,"triangle");setTimeout(()=>tone(880,.14,"triangle"),90);}
+function bad(){tone(180,.22,"sawtooth");}
+function win(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.18,"triangle"),i*120));}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2200);}
+function updMute(){$("muteBtn").textContent=MUTE?"🔇 Звук выкл":"🔊 Звук вкл";}
+function renderQ(){
+  answered=false;const q=BANK[idx];
+  $("qnum").textContent=idx+1;$("qtot").textContent=BANK.length;$("score").textContent=score;
+  $("prog").style.width=(idx/BANK.length*100)+"%";
+  $("qtext").textContent=q.q;
+  const o=$("opts");o.innerHTML="";
+  q.o.forEach((txt,i)=>{const b=document.createElement("button");b.className="opt";b.type="button";b.textContent=(i+1)+". "+txt;b.addEventListener("click",()=>pick(i,b));o.appendChild(b);});
+  $("why").classList.remove("show");$("why").innerHTML="";$("nextBtn").classList.remove("show");
+}
+function pick(i,btn){
+  if(answered)return;answered=true;
+  const q=BANK[idx],ok=i===q.c;
+  [...$("opts").children].forEach((b,k)=>{b.disabled=true;if(k===q.c)b.classList.add("right");});
+  if(ok){score++;good();}else{btn.classList.add("wrong");bad();missed.push(q);}
+  $("score").textContent=score;
+  $("why").innerHTML="<b>"+(ok?"Верно.":"Неверно.")+"</b> "+q.w;$("why").classList.add("show");
+  $("nextBtn").classList.add("show");
+  $("nextBtn").textContent=(idx===BANK.length-1)?"Показать результат":"Далее →";
+}
+$("nextBtn").addEventListener("click",()=>{if(idx<BANK.length-1){idx++;renderQ();}else finish();});
+function finish(){
+  $("prog").style.width="100%";
+  $("play").style.display="none";$("fin").style.display="block";
+  $("fscore").textContent=score+"/"+BANK.length;
+  const pct=score/BANK.length;
+  let note=pct>=0.9?"Отлично — ты знаешь правила на автомате.":pct>=0.6?"Хорошо, но разбери ошибки ниже.":"Стоит пройти ещё раз и прочитать объяснения.";
+  if(score>rec){rec=score;try{localStorage.setItem(KEY+"_rec",String(rec));}catch(e){}note+=" Новый рекорд!";win();}
+  $("fnote").textContent=note+" Рекорд: "+rec+"/"+BANK.length;
+  $("recBadge").textContent="Рекорд "+rec+"/"+BANK.length;
+  const m=$("missed");m.innerHTML=missed.length?missed.map(q=>`<div class="m"><b>Вопрос:</b> ${esc(q.q)}<br><b>Правильно:</b> ${esc(q.o[q.c])} — ${esc(q.w)}</div>`).join(""):`<div class="m" style="background:rgba(163,230,53,.08);border-color:rgba(163,230,53,.3)">Ошибок нет 🎉</div>`;
+}
+function restart(){idx=0;score=0;missed=[];$("fin").style.display="none";$("play").style.display="block";renderQ();}
+function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+$("restartBtn").addEventListener("click",restart);
+$("muteBtn").addEventListener("click",()=>{MUTE=!MUTE;try{localStorage.setItem(KEY+"_m",MUTE?"1":"0");}catch(e){}updMute();if(!MUTE)good();});
+$("shareBtn").addEventListener("click",()=>{const t="Прошёл тест ПДД и безопасности: "+score+"/"+BANK.length+" · ВК-лаборатория";window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");});
+$("recBadge").textContent="Рекорд "+rec+"/"+BANK.length;updMute();renderQ();
+</script>
+</body>
+</html>
