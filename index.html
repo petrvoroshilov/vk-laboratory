@@ -80,10 +80,14 @@
     const THUMB={
       elevator:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="74" y="14" width="52" height="92" rx="3" fill="none" stroke="#46557d" stroke-width="2"/><rect x="76" y="16" width="24" height="88" fill="#28324c"/><rect x="100" y="16" width="24" height="88" fill="#28324c"/><line x1="100" y1="18" x2="100" y2="102" stroke="#0c1120" stroke-width="2"/><circle cx="100" cy="22" r="3" fill="#ffe9a8"/><circle cx="100" cy="56" r="5" fill="#cfe9ff"/><path d="M95 62 Q100 60 105 62 L106 84 Q100 87 94 84 Z" fill="#cfe9ff"/></svg>',
       lines:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="64" y="10" width="72" height="100" rx="2" fill="#fff"/><line x1="78" y1="10" x2="78" y2="110" stroke="#f0a6b6" stroke-width="1.2"/><g stroke="#aeb8cc" stroke-width=".7"><line x1="78" y1="30" x2="132" y2="30"/><line x1="78" y1="46" x2="132" y2="46"/><line x1="78" y1="62" x2="132" y2="62"/><line x1="78" y1="78" x2="132" y2="78"/><line x1="78" y1="94" x2="132" y2="94"/><line x1="96" y1="30" x2="96" y2="94"/><line x1="114" y1="30" x2="114" y2="94"/></g><g stroke="#6f9fd8" stroke-width=".9"><line x1="78" y1="46" x2="96" y2="30"/><line x1="96" y1="62" x2="114" y2="46"/></g></svg>',
+      skeleton:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><ellipse cx="100" cy="40" rx="12" ry="13" fill="#e2e8f0"/><circle cx="95" cy="39" r="3" fill="#a3e635"/><circle cx="105" cy="39" r="3" fill="#a3e635"/><g stroke="#e2e8f0" stroke-width="2.4" stroke-linecap="round"><line x1="100" y1="53" x2="100" y2="78"/><line x1="92" y1="58" x2="108" y2="58"/><line x1="92" y1="64" x2="108" y2="64"/><line x1="92" y1="70" x2="108" y2="70"/><line x1="92" y1="56" x2="84" y2="68"/><line x1="108" y1="56" x2="116" y2="68"/><line x1="96" y1="78" x2="93" y2="98"/><line x1="104" y1="78" x2="107" y2="98"/></g><ellipse cx="100" cy="104" rx="60" ry="8" fill="#4c1d95" opacity=".4"/></svg>',
       ghost:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><circle cx="100" cy="56" r="22" fill="none" stroke="#3c4a6e" stroke-width="2" stroke-dasharray="4 4"/><text x="100" y="62" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="20" fill="#3c4a6e">+</text></svg>'
     };
     const CAT={
-      games:[{href:"elevator/",kicker:"Интерактив · мини-мультик",title:"Ты застрял в лифте",desc:"Здание с окнами, едущая кабина, 7 концовок, прогресс сохраняется.",go:"Играть →",thumb:"elevator"}],
+      games:[
+        {href:"elevator/",kicker:"Интерактив · мини-мультик",title:"Ты застрял в лифте",desc:"Здание с окнами, едущая кабина, 7 концовок, прогресс сохраняется.",go:"Играть →",thumb:"elevator"},
+        {href:"skeleton/",kicker:"Аркада · реакция",title:"Скелеты из тумана",desc:"Тапай по скелетам, пока не встали. 3 жизни, скорость растёт, рекорд.",go:"Играть →",thumb:"skeleton"}
+      ],
       school:[{href:"lines/",kicker:"Генератор · печать/PDF",title:"Разлиновка А4",desc:"Клетка 5/7/8 мм, косая, парадная, секретные линии, шапка с именем.",go:"Открыть →",thumb:"lines"}],
       scripts:[],
       generators:[],
@@ -112,7 +116,6 @@
     function setActiveTab(cat){
       [...tabs.children].forEach(x=>x.classList.toggle("active", x.dataset.cat===cat));
     }
-    // deep-link: ?cat=school открывает вкладку Школа (для постов-мостов ВК)
     const params=new URLSearchParams(location.search);
     const wantCat=params.get("cat");
     const startCat=(wantCat && Object.prototype.hasOwnProperty.call(CAT,wantCat))?wantCat:"games";
