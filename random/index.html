@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Случайный выбор / жребий — ВК-лаборатория</title>
+<meta name="description" content="Бесплатная жеребьёвка в браузере: вставь список имён, крути барабан, получай победителя или случайный порядок. История сохраняется. Без установки, 0 ₽.">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 12%,rgba(34,211,238,.16),transparent 32%),radial-gradient(circle at 82% 80%,rgba(163,230,53,.12),transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.app{width:min(620px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(10px)}
+header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:800;color:var(--accent)}.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 11px;border-radius:999px}
+main{padding:18px 20px 22px}
+.drum{position:relative;height:150px;border-radius:18px;border:1px solid var(--border);background:linear-gradient(180deg,#0a0f1c,#101a30);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:16px}
+.drum .ring{position:absolute;inset:14px;border-radius:14px;border:2px dashed rgba(34,211,238,.25)}
+#current{font-size:clamp(26px,7vw,44px);font-weight:800;color:#fff;text-align:center;padding:0 14px;z-index:2;transition:transform .12s}
+#current.spin{animation:tick .09s infinite}
+@keyframes tick{0%{transform:translateY(-2px)}50%{transform:translateY(2px)}100%{transform:translateY(-2px)}}
+#current.win{color:var(--accent2);animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:.4}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.flash{position:absolute;inset:0;background:radial-gradient(circle,rgba(163,230,53,.35),transparent 60%);opacity:0}
+.flash.go{animation:fl .6s ease}
+@keyframes fl{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+textarea{width:100%;min-height:96px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);font:inherit;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.primary:hover{filter:brightness(1.08)}.primary:disabled{opacity:.5;cursor:not-allowed;filter:none}
+.ghost{padding:11px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+.hist{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+.hist h3{margin:0 0 8px;font-size:13px;color:var(--accent2);text-transform:uppercase;letter-spacing:1px}
+.hist ol{margin:0;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.7}
+.hist ol b{color:var(--text)}
+.meta{display:flex;justify-content:space-between;gap:10px;margin-top:14px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+footer{padding:12px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">ВК-лаборатория · Генераторы</div><div class="badge" id="cntBadge">0 имён</div></header>
+<main>
+  <div class="drum"><div class="ring"></div><div class="flash" id="flash"></div><div id="current">вставь список ↓</div></div>
+  <label>Список (по одному имени в строке или через запятую)</label>
+  <textarea id="list" placeholder="Маша&#10;Даша&#10;Петя&#10;Алексей"></textarea>
+  <div class="row">
+    <button class="primary" id="spinBtn">🎲 Крутить (один победитель)</button>
+    <button class="ghost" id="shuffleBtn">🔀 Перемешать весь список</button>
+    <button class="ghost" id="clearBtn">Очистить историю</button>
+    <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+  </div>
+  <div class="hist"><h3>История победителей</h3><ol id="hist"></ol></div>
+  <div class="meta"><span>История сохраняется в этом браузере</span><span id="stateLabel">Ожидание</span></div>
+</main>
+<footer>Жеребьёвка для класса, офиса, розыгрышей. ВК-лаборатория · 0 ₽ · код открыт.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY="vklab_random_v1";
+const $=id=>document.getElementById(id);
+const cur=$("current"),flash=$("flash"),histEl=$("hist"),cntBadge=$("cntBadge"),stateLabel=$("stateLabel"),spinBtn=$("spinBtn");
+let history=[],spinning=false,timer=null;
+function load(){try{const a=JSON.parse(localStorage.getItem(KEY));history=Array.isArray(a)?a.filter(Boolean):[];}catch(e){history=[];}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(history));}catch(e){}}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2200);}
+function pool(){return $("list").value.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);}
+function renderHist(){histEl.innerHTML=history.length?history.map(h=>`<li><b>${esc(h.name)}</b> · ${h.time}</li>`).join(""):`<li style="list-style:none;color:var(--muted)">пока пусто — крути барабан</li>`;}
+function esc(v){return String(v).replace(/&/g,"&amp;").replace(/<"/g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function updCnt(){const n=pool().length;cntBadge.textContent=n+" имён";spinBtn.disabled=n<2;}
+function spin(){
+  if(spinning)return;const p=pool();if(p.length<2){toast("Нужно минимум 2 имени в списке.");return;}
+  spinning=true;stateLabel.textContent="Крутится…";cur.classList.add("spin");cur.classList.remove("win");
+  let ticks=0;const total=24+Math.floor(Math.random()*10);
+  timer=setInterval(()=>{cur.textContent=p[Math.floor(Math.random()*p.length)];ticks++;if(ticks>=total){clearInterval(timer);finish(p);}},70);
+}
+function finish(p){
+  spinning=false;cur.classList.remove("spin");
+  const win=p[Math.floor(Math.random()*p.length)];
+  cur.textContent=win;cur.classList.add("win");
+  flash.classList.remove("go");void flash.offsetWidth;flash.classList.add("go");
+  const time=new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+  history.unshift({name:win,time});history=history.slice(0,12);save();renderHist();
+  stateLabel.textContent="Победитель: "+win;toast("Победитель: "+win);
+}
+function shuffle(){
+  const p=pool();if(p.length<2){toast("Нужно минимум 2 имени.");return;}
+  const a=p.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  $("list").value=a.join("\n");updCnt();stateLabel.textContent="Список перемешан";toast("Порядок перемешан.");
+}
+function clearHist(){history=[];save();renderHist();toast("История очищена.");}
+function share(){const t=history.length?("Жребий крутили — победитель: "+history[0].name+" · ВК-лаборатория"):"Жеребьёвка в браузере — ВК-лаборатория";window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");}
+spinBtn.addEventListener("click",spin);
+$("shuffleBtn").addEventListener("click",shuffle);
+$("clearBtn").addEventListener("click",clearHist);
+$("shareBtn").addEventListener("click",share);
+$("list").addEventListener("input",updCnt);
+load();renderHist();updCnt();
+</script>
+</body>
+</html>
