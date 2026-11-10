@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Генератор Тайного Санты — распределить подарки | ВК-лаборатория</title>
+<meta name="description" content="Бесплатный генератор Тайного Санты и случайных пар: впиши имена, получи кто кому дарит, без повторов и без «сам себе». История и копирование списка. Без установки, 0 ₽.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Тайный Санта: кто кому дарит">
+<meta property="og:description" content="Список имён → честные пары «даритель → получатель», без сам-себе. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/santa/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/santa/preview-santa.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 12%,rgba(34,211,238,.16),transparent 32%),radial-gradient(circle at 82% 80%,rgba(251,113,133,.10),transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.app{width:min(620px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(10px)}
+header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:800;color:var(--accent)}.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 11px;border-radius:999px}
+main{padding:18px 20px 22px}
+.how{color:var(--muted);font-size:13px;line-height:1.5;margin:0 0 12px}
+label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+textarea{width:100%;min-height:96px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);font:inherit;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.primary:hover{filter:brightness(1.08)}
+.ghost{padding:11px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+.result{margin-top:16px;border-top:1px solid var(--border);padding-top:14px;display:none}
+.result.show{display:block}
+.result h3{margin:0 0 10px;font-size:13px;color:var(--accent2);text-transform:uppercase;letter-spacing:1px}
+.list{display:grid;gap:8px}
+.pair{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:14px}
+.pair .from{font-weight:700;color:var(--text)}
+.pair .arw{color:var(--accent);font-weight:800}
+.pair .to{font-weight:700;color:var(--accent2)}
+.warn{margin-top:10px;color:#fecdd3;font-size:13px;line-height:1.5;display:none}
+.warn.show{display:block}
+footer{padding:12px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;line-height:1.4}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">ВК-лаборатория · Генераторы</div><div class="badge" id="cntBadge">0 имён</div></header>
+<main>
+  <p class="how">Для новичка: впиши имена участников (по одному в строке или через запятую) — получишь, <b>кто кому дарит</b>. Каждый дарит ровно одному, никто не дарит сам себе, повторов нет.</p>
+  <label>Список имён</label>
+  <textarea id="list" placeholder="Маша&#10;Даша&#10;Петя&#10;Алексей&#10;Кира"></textarea>
+  <div class="row">
+    <button class="primary" id="goBtn">🎁 Раздать Сант</button>
+    <button class="ghost" id="againBtn">⟳ Ещё раз</button>
+    <button class="ghost" id="copyBtn">Скопировать список</button>
+    <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+  </div>
+  <div class="warn" id="warn"></div>
+  <div class="result" id="result">
+    <h3>Кто кому дарит</h3>
+    <div class="list" id="pairs"></div>
+  </div>
+</main>
+<footer>Честное распределение подарков для класса и офиса. ВК-лаборатория · 0 ₽ · код открыт.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+function pool(){return $("list").value.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);}
+function dedupe(a){return [...new Set(a)];}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function derange(names){
+  const g=names.slice();
+  for(let tries=0;tries<200;tries++){
+    const r=shuffle(names.slice());
+    let ok=true;for(let i=0;i<g.length;i++){if(g[i]===r[i]){ok=false;break;}}
+    if(ok)return g.map((from,i)=>({from,to:r[i]}));
+  }
+  // fallback: ротация (гарантированно без сам-себе при n>=2)
+  const r=shuffle(names.slice());
+  return g.map((from,i)=>({from,to:r[(i+1)%r.length]}));
+}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2300);}
+function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function updCnt(){const n=dedupe(pool()).length;$("cntBadge").textContent=n+" имён";}
+function run(){
+  const names=dedupe(pool());
+  const w=$("warn");w.classList.remove("show");
+  if(names.length<3){w.textContent="Нужно минимум 3 разных имени, чтобы никто не дарил сам себе и не было пар «туда-обратно» по кругу.";w.classList.add("show");$("result").classList.remove("show");return;}
+  const pairs=derange(names);
+  $("pairs").innerHTML=pairs.map(p=>`<div class="pair"><span class="from">${esc(p.from)}</span><span class="arw">→</span><span class="to">${esc(p.to)}</span></div>`).join("");
+  $("result").classList.add("show");
+  if(new Set(names.map(n=>n.toLowerCase())).size!==names.length){w.textContent="В списке были одинаковые имена — я их объединил, проверь результат.";w.classList.add("show");}
+  toast("Подарки распределены между "+names.length+" участниками.");
+}
+async function copyList(){
+  const txt=[...$("pairs").children].map(d=>d.textContent.replace("→"," дарит →")).join("\n");
+  if(!txt){toast("Сначала раздай Сант.");return;}
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(txt);toast("Список скопирован.");return;}}catch(e){}
+  try{const ta=document.createElement("textarea");ta.value=txt;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Список скопирован.");}catch(e){toast("Не удалось скопировать.");}
+}
+function share(){const t="Раздал Тайного Санту между "+dedupe(pool()).length+" участниками честно и без сам-себе · ВК-лаборатория";window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");}
+$("goBtn").addEventListener("click",run);
+$("againBtn").addEventListener("click",run);
+$("copyBtn").addEventListener("click",copyList);
+$("shareBtn").addEventListener("click",share);
+$("list").addEventListener("input",updCnt);
+updCnt();
+</script>
+</body>
+</html>
