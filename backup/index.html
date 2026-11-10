@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Резервная копия папок Windows в один клик (robocopy .bat) — ВК-лаборатория</title>
+<meta name="description" content="Бесплатный .bat для резервной копии Documents, Desktop, Pictures, Downloads через robocopy: только копирует, ничего не удаляет, с подтверждением Y/N и построчным разбором. Скачать кликом, без установки, 0 ₽.">
+<link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/backup/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Резервная копия папок Windows (.bat)">
+<meta property="og:description" content="robocopy copy-only: Documents/Desktop/Pictures/Downloads → VKLAB_Backup. Оригинал цел. Разбор по строкам. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/backup/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/backup/preview-backup.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 18% 12%,rgba(34,211,238,.14),transparent 32%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:18px}
+.wrap{max-width:880px;margin:0 auto}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.brand{font-weight:800;color:var(--accent)}.sub{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;box-shadow:0 18px 50px rgba(0,0,0,.4);margin-bottom:16px;backdrop-filter:blur(10px)}
+h1{font-size:clamp(22px,5vw,32px);margin:0 0 8px}
+p.lead{color:var(--muted);line-height:1.6;margin:0 0 4px}
+.safe{border:1px solid rgba(163,230,53,.3);background:rgba(163,230,53,.08);border-radius:14px;padding:12px 14px;color:#d9f99d;font-size:13px;line-height:1.5;margin:12px 0}
+.safe b{color:#fff}
+pre{margin:0;background:#0a0f1c;border:1px solid var(--border);border-radius:14px;padding:14px 16px;overflow:auto;font-family:"Cascadia Code",Consolas,Menlo,monospace;font-size:12.5px;line-height:1.55;color:#dbe7ff;white-space:pre}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:11px}
+td code{background:rgba(34,211,238,.1);color:var(--accent);padding:1px 5px;border-radius:6px;font-family:Consolas,monospace;font-size:12px}
+td.r{color:var(--muted);line-height:1.5}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.primary:hover{filter:brightness(1.08)}
+.ghost{padding:11px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:8px;line-height:1.5}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><div><div class="brand">ВК-лаборатория · Скрипты</div><div class="sub">Windows · robocopy · только копия · 0 ₽</div></div></div>
+
+  <div class="card">
+    <h1>💾 Резервная копия папок в один клик (backup.bat)</h1>
+    <p class="lead">Копирует Documents, Desktop, Pictures и Downloads в папку <code style="color:var(--accent)">VKLAB_Backup</code> в твоём профиле. Это <b>только копия</b>: оригиналы не удаляются и не трогаются, поэтому скрипт психологически безопаснее любой «чистки». Спрашивает Y/N перед стартом и в конце показывает, что сделано.</p>
+    <div class="safe"><b>Почему это не страшно.</b> robocopy в режиме копии (без /MIR и без удаления) не может стереть твои файлы — он лишь докладывает их в приёмник. Повторный запуск догоняет новые и изменённые файлы, старые в копии остаются. Ошибки на занятых файлах нормальны и объяснены в таблице. Права администратора не нужны.</div>
+    <pre id="code"></pre>
+    <div class="row">
+      <button class="primary" id="dlBtn">⬇ Скачать backup.bat</button>
+      <button class="ghost" id="copyBtn">Копировать код</button>
+      <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h1 style="font-size:20px">Разбор по строкам — «как я это сделал»</h1>
+    <table>
+      <tr><th>Строка</th><th>Что делает</th></tr>
+      <tr><td><code>@echo off</code></td><td class="r">Не показывает команды в окне, только результат — чище читать.</td></tr>
+      <tr><td><code>title …</code></td><td class="r">Заголовок окна, чтобы понять, что запущено.</td></tr>
+      <tr><td><code>set /p GO=…</code></td><td class="r">Спрашивает Y/N. Пока не нажмёшь Y — ничего не копируется.</td></tr>
+      <tr><td><code>if /i not "%GO%"=="Y"</code></td><td class="r">Ответ не Y — отмена и выход. Защита от случайного двойного клика.</td></tr>
+      <tr><td><code>robocopy src dst /E …</code></td><td class="r">Копирует дерево папок (/E) в приёмник. Ключи /R:1 /W:1 — не висеть на занятых файлах; /NFL /NDL /NJH /NJS /NP — тихо, без простыни логов.</td></tr>
+      <tr><td><code>/XJ</code></td><td class="r">Пропускать junctions/ссылки, чтобы не зациклиться на системных перекрёстных ссылках.</td></tr>
+      <tr><td><code>%USERPROFILE%\…</code></td><td class="r">Берёт твои личные папки автоматически — не надо вводить пути вручную.</td></tr>
+      <tr><td><code>VKLAB_Backup</code></td><td class="r">Приёмник в твоём профиле. Имя латиницей — работает на любой локали без кракозябр.</td></tr>
+      <tr><td><code>echo Done / pause</code></td><td class="r">Окно не закрывается сразу — видно итог и можно прочитать.</td></tr>
+    </table>
+    <p class="lead" style="margin-top:12px">Коды возврата robocopy (цифра в конце): <b>0–7 = успех</b> (0 — ничего нового, 1 — скопировано, 2–7 — часть файлов пропущена/занята, это нормально). <b>8+ = ошибка</b> (нет доступа к пути). Если видишь 8 — значит один из источников недоступен, проверь, что папка существует; остальные три всё равно скопировались.</p>
+    <p class="lead">Как запускать: скачай <code style="color:var(--accent)">backup.bat</code>, двойной клик (или правый клик → «Выполнить»), ответь <b>Y</b>. Дождись «Done». Копия лежит в <code style="color:var(--accent)">C:\Users\&lt;ты&gt;\VKLAB_Backup</code>.</p>
+  </div>
+
+  <footer>ВК-лаборатория · скрипт открыт, можно читать и править под себя · 0 ₽</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const BAT=[
+"@echo off",
+"title VKLAB backup",
+"echo === VKLAB backup (copy only, originals untouched) ===",
+"echo Copies Documents, Desktop, Pictures, Downloads into VKLAB_Backup.",
+"echo Nothing is deleted. Safe to run repeatedly.",
+"echo.",
+"set /p GO=Continue? (Y/N): ",
+"if /i not \"%GO%\"==\"Y\" (echo Cancelled. & pause & exit /b)",
+"echo.",
+"echo [1/4] Documents...",
+"robocopy \"%USERPROFILE%\\Documents\" \"%USERPROFILE%\\VKLAB_Backup\\Documents\" /E /XJ /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul",
+"echo [2/4] Desktop...",
+"robocopy \"%USERPROFILE%\\Desktop\" \"%USERPROFILE%\\VKLAB_Backup\\Desktop\" /E /XJ /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul",
+"echo [3/4] Pictures...",
+"robocopy \"%USERPROFILE%\\Pictures\" \"%USERPROFILE%\\VKLAB_Backup\\Pictures\" /E /XJ /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul",
+"echo [4/4] Downloads...",
+"robocopy \"%USERPROFILE%\\Downloads\" \"%USERPROFILE%\\VKLAB_Backup\\Downloads\" /E /XJ /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul",
+"echo.",
+"echo Done. Copy is in %USERPROFILE%\\VKLAB_Backup",
+"echo Return code 0-7 = OK (busy files skipped is normal).",
+"pause"
+].join("\r\n");
+const $=id=>document.getElementById(id);
+$("code").textContent=BAT;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2300);}
+$("dlBtn").addEventListener("click",()=>{
+  try{
+    const blob=new Blob([BAT],{type:"application/octet-stream"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="backup.bat";
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    toast("backup.bat скачан. Запусти двойным кликом и ответь Y.");
+  }catch(e){toast("Не удалось скачать — скопируй код вручную.");}
+});
+$("copyBtn").addEventListener("click",async()=>{
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(BAT);toast("Код скопирован.");return;}}catch(e){}
+  try{const ta=document.createElement("textarea");ta.value=BAT;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Код скопирован.");}catch(e){toast("Не удалось скопировать.");}
+});
+$("shareBtn").addEventListener("click",()=>{const t="Резервная копия папок Windows в один клик (robocopy .bat, copy-only) с разбором по строкам — ВК-лаборатория";window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");});
+</script>
+</body>
+</html>
