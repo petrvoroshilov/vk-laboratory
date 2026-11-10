@@ -86,7 +86,7 @@ function T(L){ // шаблоны: возвращают {t, ans}; L=предел
   ];
   return{one:one,two:two};
 }
-function wrap(text,max){var words=text.split(" "),lines=[],cur="";for(var i=0;i<words.length;i++){var试=cur?cur+" "+words[i]:words[i];if(试.length>max&&cur){lines.push(cur);cur=words[i];}else cur=试;}if(cur)lines.push(cur);return lines;}
+function wrap(text,max){var words=text.split(" "),lines=[],cur="";for(var i=0;i<words.length;i++){var cand=cur?cur+" "+words[i]:words[i];if(cand.length>max&&cur){lines.push(cur);cur=words[i];}else cur=cand;}if(cur)lines.push(cur);return lines;}
 function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function gen(n,act,L){var s=T(L),out=[];for(var i=0;i<n;i++){var kind=act;if(act==="mix")kind=(i%2===0)?"one":"two";var arr=s[kind];out.push(arr[ri(0,arr.length-1)]());}return out;}
 function sheetP(probs,o,pi,total){
