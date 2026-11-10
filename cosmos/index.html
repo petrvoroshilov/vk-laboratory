@@ -1,1 +1,162 @@
-
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Космос: уворачивайся — аркада на реакцию в браузере | ВК-лаборатория</title>
+<meta name="description" content="Бесплатная аркада «Космос»: управляй кораблём, уворачивайся от астероидов, собирай звёзды. 3 жизни, растущая скорость, рекорд в браузере, включаемый звук. Работает на телефоне. Без установки, 0 ₽.">
+<link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/cosmos/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Космос: уворачивайся — аркада">
+<meta property="og:description" content="Веди корабль пальцем, уворачивайся от астероидов, лови звёзды. 3 жизни · рекорд · звук on/off. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/cosmos/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/cosmos/preview-cosmos.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 10%,rgba(34,211,238,.16),transparent 32%),radial-gradient(circle at 80% 85%,rgba(76,29,149,.18),transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.app{width:min(560px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(10px)}
+header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:800;color:var(--accent)}.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 11px;border-radius:999px}
+.stage-wrap{position:relative;padding:12px 14px 0}
+.stage{width:100%;aspect-ratio:400/300;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#05070f;position:relative;touch-action:none}
+.stage svg{display:block;width:100%;height:100%}
+.hud{position:absolute;top:20px;left:22px;right:22px;display:flex;justify-content:space-between;pointer-events:none;font-size:12px;z-index:3}
+.hud .col{display:flex;flex-direction:column;gap:1px}
+.hud .lbl{color:var(--muted);font-size:10px;letter-spacing:.6px;text-transform:uppercase}
+.hud .val{font-weight:800;color:var(--text);font-size:16px;line-height:1}
+.hud .lives{color:var(--danger);font-size:14px;letter-spacing:1px}
+.hud .rec{color:var(--accent2)}
+.overlay{position:absolute;inset:12px;border-radius:16px;background:rgba(5,7,15,.82);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:18px;z-index:5}
+.overlay.hide{display:none}
+.overlay h2{margin:0;font-size:22px;color:#fff}
+.overlay .sk{color:var(--accent2);font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+.overlay p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;max-width:340px}
+.overlay .big{font-size:32px;font-weight:800;color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.primary{padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.ghost{padding:10px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;padding:12px 14px 0}
+.meta{display:flex;justify-content:space-between;gap:10px;padding:10px 14px 0;color:var(--muted);font-size:12px;flex-wrap:wrap}
+footer{padding:11px 14px;color:var(--muted);font-size:12px;text-align:center;line-height:1.4}
+footer a{color:var(--accent)}
+.star{animation:tw 2s ease-in-out infinite}@keyframes tw{0%,100%{opacity:.3}50%{opacity:1}}
+.boom{animation:bm .3s ease-out forwards}@keyframes bm{0%{transform:scale(1);opacity:1}100%{transform:scale(2.4);opacity:0}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">ВК-лаборатория · Игры</div><div class="badge" id="lvlBadge">Уровень 1</div></header>
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+    <svg id="scene" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-label="Космос: корабль и астероиды">
+      <defs><radialGradient id="neb" cx="0.3" cy="0.2" r="0.8"><stop offset="0" stop-color="#1a1033"/><stop offset="1" stop-color="#05070f"/></radialGradient></defs>
+      <rect width="400" height="300" fill="url(#neb)"/>
+      <g id="stars"></g>
+      <g id="objects"></g>
+      <g id="ship" transform="translate(200 250)">
+        <polygon points="0,-16 12,12 0,6 -12,12" fill="#cfe9ff" stroke="#22d3ee" stroke-width="1.5"/>
+        <polygon points="-5,8 0,18 5,8" fill="#fbbf24" class="flick"/>
+      </g>
+    </svg>
+    <div class="hud">
+      <div class="col"><span class="lbl">Очки</span><span class="val" id="scoreVal">0</span></div>
+      <div class="col" style="align-items:center"><span class="lbl">Жизни</span><span class="lives" id="livesVal">❤❤❤</span></div>
+      <div class="col" style="align-items:flex-end"><span class="lbl">Рекорд</span><span class="val rec" id="recVal">0</span></div>
+    </div>
+    <div class="overlay" id="startOverlay">
+      <div class="sk">Аркада на реакцию</div>
+      <h2>КОСМОС: УВОРАЧИВАЙСЯ</h2>
+      <p>Веди корабль пальцем (или мышью / стрелками ← →). Уворачивайся от астероидов, собирай звёзды. Столкновение — минус жизнь. Скорость растёт с уровнем.</p>
+      <div class="row"><button class="primary" id="playBtn">▶ Играть</button></div>
+    </div>
+    <div class="overlay hide" id="overOverlay">
+      <div class="sk">Игра окончена</div>
+      <div class="big" id="finalScore">0</div>
+      <p id="finalNote">Рекорд: 0</p>
+      <div class="row"><button class="primary" id="againBtn">↻ Ещё раз</button><button class="ghost" id="shareBtn2">Поделиться в ВК</button></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button class="ghost" id="restartBtn">Начать заново</button>
+  <button class="ghost" id="muteBtn">🔊 Звук вкл</button>
+  <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+</div>
+<div class="meta"><span>Рекорд сохраняется в этом браузере</span><span id="stateLabel">Ожидание</span></div>
+<footer>ВК-лаборатория · 0 ₽ · код открыт · <a href="../cat/games/">Все игры</a></footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* GAME-COSMOS-START */
+var KEY="vklab_cosmos_v1";
+var TOP=0,BOTTOM=300,SHIP_Y=250,BASE_SPEED=70,BASE_SPAWN=0.95,MIN_SPAWN=0.42;
+var $=function(id){return document.getElementById(id);};
+var scene=$("scene"),objLayer=$("objects"),starLayer=$("stars"),ship=$("ship");
+var scoreVal=$("scoreVal"),livesVal=$("livesVal"),recVal=$("recVal"),lvlBadge=$("lvlBadge"),stateLabel=$("stateLabel");
+var startOv=$("startOverlay"),overOv=$("overOverlay"),finalScore=$("finalScore"),finalNote=$("finalNote"),toastEl=$("toast");
+var objs=[],score=0,lives=3,running=false,raf=0,last=0,spawnAcc=0,record=0,shipX=200,targetX=200,MUTE=false,AC=null,toastTimer=null;
+try{record=parseInt(localStorage.getItem(KEY),10)||0;MUTE=localStorage.getItem(KEY+"_m")==="1";}catch(e){record=0;}
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();return AC;}
+function tone(f,d,t){if(MUTE)return;try{var a=ac(),o=a.createOscillator(),g=a.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(a.destination);var n=a.currentTime;o.start(n);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.stop(n+d);}catch(e){}}
+function whoosh(){tone(900,.12,"sine");setTimeout(function(){tone(500,.12,"sine");},60);}
+function boom(){tone(120,.3,"sawtooth");}
+function ping(){tone(880,.1,"triangle");}
+function toast(m){toastEl.textContent=m;toastEl.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){toastEl.classList.remove("show");},2200);}
+function level(){return 1+Math.floor(score/8);}
+function speedFor(){return BASE_SPEED*(1+(level()-1)*0.16);}
+function spawnFor(){return Math.max(MIN_SPAWN,BASE_SPAWN-(level()-1)*0.07);}
+// фоновые звёзды
+(function(){var s="";for(var i=0;i<40;i++){var x=Math.random()*400,y=Math.random()*300,r=Math.random()*1.4+.4;s+='<circle class="star" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="#e5e7eb" style="animation-delay:'+(-Math.random()*2).toFixed(2)+'s"/>';}starLayer.innerHTML=s;})();
+function spawn(){
+  var star=Math.random()<0.32;
+  var x=20+Math.random()*360;
+  var el;
+  if(star){el=document.createElementNS("http://www.w3.org/2000/svg","polygon");el.setAttribute("points","0,-7 2,-2 7,-2 3,1 5,6 0,3 -5,6 -3,1 -7,-2 -2,-2");el.setAttribute("fill","#a3e635");}
+  else{el=document.createElementNS("http://www.w3.org/2000/svg","polygon");var pts="",n=7;for(var i=0;i<n;i++){var ang=i/n*Math.PI*2,rr=8+Math.random()*5;pts+=(Math.cos(ang)*rr).toFixed(1)+","+(Math.sin(ang)*rr).toFixed(1)+" ";}el.setAttribute("points",pts.trim());el.setAttribute("fill","#64748b");el.setAttribute("stroke","#94a3b8");el.setAttribute("stroke-width","1");}
+  el.setAttribute("transform","translate("+x+" -10)");
+  objLayer.appendChild(el);
+  objs.push({el:el,x:x,y:-10,speed:speedFor()*(star?0.8:1),star:star,r:star?7:11,dead:false});
+}
+function hitShip(o){return Math.abs(o.x-shipX)<(o.r+10)&&Math.abs(o.y-SHIP_Y)<(o.r+14);}
+function boomAt(o){var g=document.createElementNS("http://www.w3.org/2000/svg","circle");g.setAttribute("cx",o.x);g.setAttribute("cy",o.y);g.setAttribute("r",o.r);g.setAttribute("fill",o.star?"#a3e635":"#fb7185");g.setAttribute("class","boom");objLayer.appendChild(g);setTimeout(function(){g.remove();},320);}
+function frame(now){
+  if(!running)return;
+  var dt=Math.min(0.05,(now-last)/1000);last=now;
+  shipX+=(targetX-shipX)*Math.min(1,dt*14);
+  ship.setAttribute("transform","translate("+shipX.toFixed(1)+" "+SHIP_Y+")");
+  spawnAcc+=dt;if(spawnAcc>=spawnFor()){spawn();spawnAcc=0;}
+  for(var i=0;i<objs.length;i++){var o=objs[i];if(o.dead)continue;o.y+=o.speed*dt;o.el.setAttribute("transform","translate("+o.x.toFixed(1)+" "+o.y.toFixed(1)+")");
+    if(hitShip(o)){o.dead=true;boomAt(o);if(o.star){score++;ping();}else{lives--;boom();livesVal.classList.remove("flash");void livesVal.offsetWidth;}updateHUD();if(lives<=0){gameOver();return;}}
+    else if(o.y>BOTTOM+15){o.dead=true;o.el.remove();}
+  }
+  objs=objs.filter(function(o){if(o.dead&&!o.el.parentNode)return false;if(o.dead){o.el.remove();return false;}return true;});
+  raf=requestAnimationFrame(frame);
+}
+function updateHUD(){scoreVal.textContent=score;livesVal.textContent="❤".repeat(Math.max(0,lives))||"—";lvlBadge.textContent="Уровень "+level();recVal.textContent=record;}
+function startGame(){objs.forEach(function(o){o.el.remove();});objs=[];objLayer.innerHTML="";score=0;lives=3;spawnAcc=0;running=true;shipX=200;targetX=200;startOv.classList.add("hide");overOv.classList.add("hide");stateLabel.textContent="Игра идёт";updateHUD();cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(frame);}
+function gameOver(){running=false;cancelAnimationFrame(raf);if(score>record){record=score;try{localStorage.setItem(KEY,String(record));}catch(e){}toast("Новый рекорд: "+record+"!");}finalScore.textContent=score;finalNote.textContent="Рекорд: "+record+(score>=record&&score>0?" — ты в топе этого браузера":"");overOv.classList.remove("hide");stateLabel.textContent="Финал";updateHUD();}
+function goStart(){running=false;cancelAnimationFrame(raf);objs.forEach(function(o){o.el.remove();});objs=[];objLayer.innerHTML="";overOv.classList.add("hide");startOv.classList.remove("hide");stateLabel.textContent="Ожидание";}
+function share(){var t=(running||score>0)?("Набрал "+score+" очков в «Космос: уворачивайся» — ВК-лаборатория"):("Аркада «Космос: уворачивайся» — ВК-лаборатория");window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(t)+"&no_vk_links=1","_blank","noopener");}
+function setTargetFromEvent(e){var rect=$("stage").getBoundingClientRect();var cx=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;targetX=Math.max(14,Math.min(386,cx/rect.width*400));}
+$("stage").addEventListener("pointerdown",function(e){e.preventDefault();try{ac().resume();}catch(_){}setTargetFromEvent(e);});
+$("stage").addEventListener("pointermove",function(e){if(running)setTargetFromEvent(e);});
+document.addEventListener("keydown",function(e){if(!running)return;if(e.key==="ArrowLeft")targetX=Math.max(14,targetX-22);if(e.key==="ArrowRight")targetX=Math.min(386,targetX+22);});
+$("playBtn").addEventListener("click",function(){try{ac().resume();}catch(_){}whoosh();startGame();});
+$("againBtn").addEventListener("click",function(){whoosh();startGame();});
+$("restartBtn").addEventListener("click",goStart);
+$("shareBtn").addEventListener("click",share);$("shareBtn2").addEventListener("click",share);
+$("muteBtn").addEventListener("click",function(){MUTE=!MUTE;try{localStorage.setItem(KEY+"_m",MUTE?"1":"0");}catch(e){}$("muteBtn").textContent=MUTE?"🔇 Звук выкл":"🔊 Звук вкл";if(!MUTE)ping();});
+$("muteBtn").textContent=MUTE?"🔇 Звук выкл":"🔊 Звук вкл";
+updateHUD();
+/* GAME-COSMOS-END */
+</script>
+</body>
+</html>
