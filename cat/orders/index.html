@@ -1,52 +1,38 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Заказы и разработки — ВК-лаборатория</title>
-  <meta name="description" content="Индивидуальные разработки ВК-лаборатории: от разлиновки до скрипта. Правила, примеры, приём заявок.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="ВК-лаборатория">
-  <meta property="og:title" content="📦 Заказы и индивидуальные разработки">
-  <meta property="og:description" content="Сделаю под вашу задачу: генератор, скрипт, макрос, мини-игру. Правила и примеры внутри.">
-  <meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/cat/orders/">
-  <meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/cat/orders/preview-orders.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <style>
-    :root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,rgba(34,211,238,.16),transparent 30%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px}
-    .wrap{max-width:760px;margin:0 auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.back{color:var(--accent);text-decoration:none;font-size:14px;font-weight:700}.brand{color:var(--muted);font-size:13px}
-    h1{font-size:clamp(24px,5vw,36px);margin:0 0 6px}.sub{color:var(--muted);margin:0 0 22px;line-height:1.5}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px 22px;box-shadow:0 16px 44px rgba(0,0,0,.4)}
-    .card h2{margin:0 0 10px;font-size:20px;color:var(--accent2)}
-    .card ul{margin:0;padding-left:20px;color:var(--muted);line-height:1.7;font-size:14px}
-    .card ul b{color:var(--text)}
-    .btn{display:inline-block;margin-top:16px;padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;text-decoration:none;font-size:14px}
-    footer{color:var(--muted);font-size:12px;margin-top:26px;text-align:center;line-height:1.5}footer a{color:var(--accent)}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Заказы и индивидуальные разработки — ВК-лаборатория</title>
+<meta name="description" content="Полка заказов ВК-лаборатории: как оставить заявку на генератор, скрипт, игру или доработку. Форма без сервера, правила работы, примеры. Без оплаты за простые штуки, 0 ₽.">
+<link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/cat/orders/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="📦 Заказы — индивидуальные разработки">
+<meta property="og:description" content="Опиши задачу через форму без сервера → заявка придёт в ЛС ВК. Правила и примеры. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/cat/orders/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/order/preview-order.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<style>:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,rgba(163,230,53,.14),transparent 30%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px}.wrap{max-width:880px;margin:0 auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.back{color:var(--accent);text-decoration:none;font-size:14px;font-weight:700}.brand{color:var(--muted);font-size:13px}h1{font-size:clamp(24px,5vw,36px);margin:0 0 6px}.sub{color:var(--muted);margin:0 0 22px;line-height:1.5}.rules{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;margin-bottom:22px;line-height:1.6;color:var(--muted);font-size:14px}.rules b{color:var(--text)}.rules h2{margin:0 0 8px;font-size:15px;color:var(--accent2);text-transform:uppercase;letter-spacing:1px}.rules ul{margin:8px 0 0;padding-left:20px}.rules li{margin:4px 0}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}.tile{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;box-shadow:0 16px 44px rgba(0,0,0,.4);transition:transform .14s,border-color .14s}.tile:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.45)}.thumb{height:120px;background:#0a0f1c;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}.thumb svg{width:100%;height:100%}.t-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}.kicker{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--accent)}h3{margin:0;font-size:18px}p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;flex:1}.go{font-weight:800;font-size:13px;color:var(--accent2)}.tile.soon{opacity:.62}.tile.soon .go{color:var(--muted)}footer{color:var(--muted);font-size:12px;margin-top:26px;text-align:center;line-height:1.5}footer a{color:var(--accent)}</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="top"><a class="back" href="../../">← Все категории</a><span class="brand">ВК-лаборатория</span></div>
-    <h1>📦 Заказы и индивидуальные разработки</h1>
-    <p class="sub">Нужна своя штука под вашу задачу? Здесь правила и примеры того, что я делаю.</p>
-    <div class="card">
-      <h2>Что можно заказать</h2>
-      <ul>
-        <li><b>Генератор или веб-инструмент</b> — разлиновка, рабочие листы, калькулятор, тест: открывается по ссылке, без установки.</li>
-        <li><b>Скрипт или макрос</b> — Windows, Word, Excel, BAS: убирает рутину в один клик, с инструкцией.</li>
-        <li><b>Мини-игру или интерактив</b> — квест, аркада, обучающая история с выбором.</li>
-      </ul>
-      <h2 style="margin-top:18px">Как это работает</h2>
-      <ul>
-        <li>Вы пишете задачу в обсуждение рубрики или в сообщения сообщества.</li>
-        <li>Я предлагаю решение и срок; сложные вещи делаю по шагам с промежуточными ссылками.</li>
-        <li>Готовая вещь публикуется ссылкой; по желанию — с открытым кодом и разбором.</li>
-      </ul>
-      <a class="btn" href="https://vk.ru/topic-243093533_68876839">Оставить заявку в обсуждении →</a>
-    </div>
-    <footer>Примеры работ: <a href="../../">каталог лаборатории</a> · Сообщество: <a href="https://vk.ru/vklaboratory1">vk.ru/vklaboratory1</a></footer>
+<div class="wrap">
+  <div class="top"><a class="back" href="../../">← Все категории</a><span class="brand">ВК-лаборатория</span></div>
+  <h1>📦 Заказы и индивидуальные разработки</h1>
+  <p class="sub">Нужна штука, которой нет на полках? Опиши задачу — сделаю и выложу с разбором, как все остальные инструменты.</p>
+  <div class="rules">
+    <h2>Как это работает</h2>
+    <p>Заполни форму заявки — она соберёт готовый текст <b>без сервера</b> (GitHub Pages статичен, поэтому заявка уходит через копирование в ЛС сообщества, обсуждение рубрики или письмо). Чем конкретнее описание, тем быстрее возьму в работу.</p>
+    <ul>
+      <li><b>Что можно заказать:</b> генератор/веб-инструмент по ссылке; скрипт/макрос для Windows, Word, Excel, BAS; мини-игру или интерактив с выбором; доработку уже готового инструмента под твою методику.</li>
+      <li><b>Цена:</b> простые штуки делаю бесплатно в рамках лаборатории (код открытый, публикуется на полке); сложное/коммерческое/для организации — обсудим отдельно, в форме есть поле бюджета.</li>
+      <li><b>Сроки:</b> сложные делаю по шагам с промежуточными ссылками — ты видишь прогресс и можешь поправить курс до финала, а не получать «внезапно готовое».</li>
+      <li><b>Как формулировать:</b> что на входе, что должно получаться на выходе, для кого (ребёнок/класс/офис/сайт). Это три вопроса, которые снимают 90% недопонимания.</li>
+    </ul>
   </div>
+  <div class="grid">
+    <a class="tile" href="../../order/"><div class="thumb"><svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="62" y="14" width="76" height="92" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="2"/><g fill="#1c2740" stroke="#2c3a5a"><rect x="70" y="26" width="60" height="9" rx="3"/><rect x="70" y="42" width="60" height="9" rx="3"/><rect x="70" y="58" width="38" height="9" rx="3"/><rect x="112" y="58" width="18" height="9" rx="3"/></g><rect x="70" y="76" width="40" height="14" rx="7" fill="#a3e635"/><rect x="114" y="76" width="16" height="14" rx="7" fill="none" stroke="#22d3ee" stroke-width="1.4"/></svg></div><div class="t-body"><div class="kicker">Заявка · без сервера</div><h3>Оставить заявку</h3><p>Опиши задачу → скопируй готовую заявку → отправь в ЛС ВК или письмом. Черновик сохраняется.</p><span class="go">Заказать →</span></div></a>
+    <div class="tile soon"><div class="thumb"><svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><circle cx="100" cy="56" r="22" fill="none" stroke="#3c4a6e" stroke-width="2" stroke-dasharray="4 4"/><text x="100" y="62" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="20" fill="#3c4a6e">+</text></svg></div><div class="t-body"><div class="kicker">В работе</div><h3>Сложные интеграции</h3><p>Связки с сайтами, формами учёта, 1С/Битрикс — по запросу, с оценкой срока.</p><span class="go">Обсуждается</span></div></div>
+  </div>
+  <footer>Сообщество: <a href="https://vk.ru/vklaboratory1">vk.ru/vklaboratory1</a> · Каталог: <a href="../../">вся лаборатория</a></footer>
+</div>
 </body>
 </html>
