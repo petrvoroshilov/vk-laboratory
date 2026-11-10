@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://petrvoroshilov.github.io/vk-laboratory/sitemap.xml
