@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Эвакуация при пожаре — интерактивный квест «что делать» | ВК-лаборатория</title>
+<meta name="description" content="Бесплатный интерактивный квест «ЧС в здании»: пожарная тревога, выбор действий, 5 концовок с разбором. Проверка двери, отказ от лифта, эвакуация в дыму. Звук включаемый. Без установки, 0 ₽.">
+<link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/evacuate/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ВК-лаборатория">
+<meta property="og:title" content="Эвакуация при пожаре — квест с выбором">
+<meta property="og:description" content="Пожарная тревога в здании. Твои действия решают исход: 5 концовок с разбором. Звук on/off. 0 ₽.">
+<meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/evacuate/">
+<meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/evacuate/preview-evacuate.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--danger:#fb7185;--warn:#fbbf24;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 10%,rgba(251,191,36,.14),transparent 32%),radial-gradient(circle at 80% 85%,rgba(251,113,133,.12),transparent 34%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.app{width:min(640px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.5);overflow:hidden;backdrop-filter:blur(10px)}
+header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:800;color:var(--accent)}.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 11px;border-radius:999px}
+.art{width:100%;aspect-ratio:16/9;background:#0a0f1c;border-bottom:1px solid var(--border);display:block}
+.art svg{width:100%;height:100%;display:block}
+main{padding:16px 18px 20px}
+.scene{font-size:16px;line-height:1.6;margin:0 0 16px}
+.choices{display:grid;gap:10px}
+button{appearance:none;border:0;cursor:pointer;font:inherit}
+.ch{text-align:left;padding:13px 16px;border-radius:14px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);transition:transform .12s,background .12s,border-color .12s}
+.ch:hover{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.45);transform:translateY(-1px)}
+.end{padding:16px;border-radius:16px;border:1px solid var(--border);margin-bottom:14px}
+.end.good{background:rgba(163,230,53,.1);border-color:rgba(163,230,53,.4)}
+.end.bad{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.4)}
+.end h2{margin:0 0 6px;font-size:18px}
+.end.good h2{color:var(--accent2)}.end.bad h2{color:#fecdd3}
+.end p{margin:0;color:var(--muted);line-height:1.6;font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.primary{padding:11px 18px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#06121a;font-weight:800;font-size:14px}
+.ghost{padding:10px 16px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px}
+.ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+.meta{display:flex;justify-content:space-between;gap:10px;margin-top:14px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+footer{padding:11px 18px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;line-height:1.4}
+footer a{color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;border:1px solid rgba(255,255,255,.16);padding:11px 15px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100vw - 32px);text-align:center;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.smoke{animation:sm 5s ease-in-out infinite}@keyframes sm{0%,100%{transform:translateX(-8px);opacity:.5}50%{transform:translateX(8px);opacity:.7}}
+.flick{animation:fl 1.4s steps(2) infinite}@keyframes fl{0%{opacity:.4}100%{opacity:.9}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">ВК-лаборатория · Игры</div><div class="badge" id="foundBadge">Концовки 0/5</div></header>
+<svg class="art" id="art" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+<main>
+  <p class="scene" id="scene"></p>
+  <div class="choices" id="choices"></div>
+  <div class="row" id="ctrl" style="display:none">
+    <button class="primary" id="againBtn">↻ Начать заново</button>
+    <button class="ghost" id="copyBtn">Скопировать результат</button>
+    <button class="ghost" id="shareBtn">Поделиться в ВК</button>
+  </div>
+  <div class="meta"><span>Прогресс концовок сохраняется в браузере</span><span id="stateLabel">Сцена</span></div>
+</main>
+<footer>Это учебный квест, не официальная инструкция. При реальной опасности звони <b>112</b>. · <a href="../cat/games/">Все игры</a> · <a href="../">Каталог</a></footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* GAME-EVAC-START */
+var KEY="vklab_evacuate_v1";
+var ART={
+corridor:'<rect width="400" height="225" fill="#12100e"/><rect x="0" y="150" width="400" height="75" fill="#1c1814"/><polygon points="60,40 120,40 150,150 30,150" fill="#241d16"/><polygon points="280,40 340,40 370,150 250,150" fill="#241d16"/><rect x="150" y="60" width="100" height="90" fill="#0c0a08" stroke="#3a2e22" stroke-width="2"/><rect x="150" y="60" width="100" height="90" fill="#fb7185" opacity=".08" class="flick"/><circle cx="200" cy="30" r="6" fill="#fbbf24" class="flick"/>',
+stairs:'<rect width="400" height="225" fill="#0e1320"/><g fill="#1c2740" stroke="#2c3a5a" stroke-width="1"><rect x="40" y="180" width="320" height="15"/><rect x="60" y="160" width="300" height="15"/><rect x="80" y="140" width="280" height="15"/><rect x="100" y="120" width="260" height="15"/><rect x="120" y="100" width="240" height="15"/><rect x="140" y="80" width="220" height="15"/></g><line x1="360" y1="195" x2="360" y2="60" stroke="#22d3ee" stroke-width="3"/><ellipse cx="200" cy="70" rx="150" ry="40" fill="#4c1d95" opacity=".4" class="smoke"/>',
+smoke:'<rect width="400" height="225" fill="#15110d"/><ellipse cx="120" cy="120" rx="120" ry="70" fill="#3a2e22" opacity=".6" class="smoke"/><ellipse cx="280" cy="150" rx="140" ry="60" fill="#241d16" opacity=".7" class="smoke"/><circle cx="320" cy="60" r="40" fill="#fb7185" opacity=".25" class="flick"/><circle cx="320" cy="60" r="18" fill="#fbbf24" opacity=".5" class="flick"/>',
+exit:'<rect width="400" height="225" fill="#0b1220"/><rect x="0" y="150" width="400" height="75" fill="#10243a"/><rect x="150" y="40" width="100" height="110" fill="#a3e635" opacity=".18"/><rect x="150" y="40" width="100" height="110" fill="none" stroke="#a3e635" stroke-width="3"/><circle cx="200" cy="30" r="8" fill="#a3e635"/><path d="M188 90 q12 -14 24 0 v40 h-24 z" fill="#cfe9ff"/>',
+dead:'<rect width="400" height="225" fill="#1a0d10"/><circle cx="200" cy="110" r="70" fill="#fb7185" opacity=".12" class="flick"/><line x1="120" y1="40" x2="280" y2="180" stroke="#fb7185" stroke-width="6" opacity=".7"/><line x1="280" y1="40" x2="120" y2="180" stroke="#fb7185" stroke-width="6" opacity=".7"/>'
+};
+var SCENES={
+start:{art:"corridor",text:"Вечер. Ты в офисе на 9-м этаже. Резко запахло гарью, затем загудела сирена пожарной тревоги. За дверью кабинета — коридор в дыму. Твои первые действия?",choices:[
+{t:"Приложить тыльную сторону ладони к двери, прежде чем открыть",to:"door"},
+{t:"Вызвать лифт и спуститься на нём — быстрее",to:"e_lift"},
+{t:"Спрятаться в кабинете и ждать, пока всё закончится",to:"e_hide"},
+{t:"Сначала собрать документы и ноутбук в сумку",to:"e_bag"}
+]},
+door:{art:"corridor",text:"Дверь прохладная — за ней нет открытого огня, но коридор затянут дымом. Ты открываешь и выходишь на лестничную площадку. На 7-м этаже дым гуще, видимость падает. Как спускаться?",choices:[
+{t:"Пригнуться, дышать через ткань, двигаться вдоль стены к свету выхода",to:"e_good"},
+{t:"Бежать в полный рост, чтобы скорее проскочить",to:"e_run"}
+]},
+e_good:{art:"exit",end:true,kind:"good",title:"Ты вышел на свежий воздух",msg:"Правильно. Прхладная дверь = можно открывать; пригнулся = вверху воздуха больше; ткань = фильтр от сажи; вдоль стены = не потеряешься в дыму. Эвакуация по лестнице, не задерживаясь."},
+e_lift:{art:"dead",end:true,kind:"bad",title:"Лифт — ловушка",msg:"При пожаре лифт отключают автоматикой, а шахта работает как труба для дыма и огня. Кабина может остановиться между этажами, двери откроются в пустую шахту. Никогда не лифт при эвакуации — только лестница."},
+e_hide:{art:"dead",end:true,kind:"bad",title:"Спрятаться = отрезаться",msg:"Огонь и дым распространяются, и кабинет становится капканом без выхода. Ждать «пока закончится» нельзя: эвакуируйся по плану к точке сбора, а при невозможности выйти — звони 112, обозначь себя у окна с тканью на лице."},
+e_bag:{art:"dead",end:true,kind:"bad",title:"Вещи не стоят секунд",msg:"Пока ты собираешь сумку, дым набирает этаж. Возвращаться за имуществом при тревоге — главная причина гибели в пожарах. Жизнь важнее документов: выходи, ценности потом."},
+e_run:{art:"dead",end:true,kind:"bad",title:"Бег в дыму = вдох + падение",msg:"В полный рост ты вдыхаешь самый горячий и ядовитый слой воздуха под потолком, а бег в тумане дыма = споткнуться и упасть. Пригнись, замедлись, иди вдоль стены."}
+};
+var TOTAL=5;
+var $=function(id){return document.getElementById(id);};
+var found={},cur="start",MUTE=false,AC=null;
+try{found=JSON.parse(localStorage.getItem(KEY+"_f"))||{};MUTE=localStorage.getItem(KEY+"_m")==="1";}catch(e){found={};}
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();return AC;}
+function tone(f,d,t){if(MUTE)return;try{var a=ac(),o=a.createOscillator(),g=a.createGain();o.type=t||"sine";o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(a.destination);var n=a.currentTime;o.start(n);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.stop(n+d);}catch(e){}}
+function siren(){tone(440,.5,"sawtooth");setTimeout(function(){tone(330,.5,"sawtooth");},480);}
+function clickS(){tone(520,.07,"triangle");}
+function goodS(){[523,659,784,1046].forEach(function(f,i){setTimeout(function(){tone(f,.16,"triangle");},i*110);});}
+function badS(){tone(160,.4,"sawtooth");}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(function(){t.classList.remove("show");},2200);}
+function countFound(){var n=0;for(var k in found){if(found[k])n++;}return n;}
+function updBadge(){$("foundBadge").textContent="Концовки "+countFound()+"/"+TOTAL;}
+function saveFound(){$("ctrl").style.display="none";$("choices").innerHTML="";updBadge();}
+function show(id){
+  var s=SCENES[id];cur=id;
+  $("art").innerHTML=ART[s.art]||ART.corridor;
+  if(s.end){
+    $("scene").textContent="";
+    var d=document.createElement("div");d.className="end "+(s.kind==="good"?"good":"bad");
+    d.innerHTML="<h2>"+s.title+"</h2><p>"+s.msg+"</p>";
+    $("choices").innerHTML="";$("choices").appendChild(d);
+    if(!found[id]){found[id]=1;try{localStorage.setItem(KEY+"_f",JSON.stringify(found));}catch(e){}}
+    if(s.kind==="good")goodS();else badS();
+    $("ctrl").style.display="flex";$("stateLabel").textContent=s.kind==="good"?"Успешно":"Ошибка";
+    updBadge();
+  }else{
+    $("scene").textContent=s.text;
+    $("choices").innerHTML="";
+    s.choices.forEach(function(c){
+      var b=document.createElement("button");b.className="ch";b.type="button";b.textContent="▸ "+c.t;
+      b.addEventListener("click",function(){clickS();show(c.to);});
+      $("choices").appendChild(b);
+    });
+    $("ctrl").style.display="none";$("stateLabel").textContent="Сцена";
+  }
+}
+function restart(){try{ac().resume();}catch(e){}siren();show("start");}
+function resultTxt(){return "Квест «Эвакуация при пожаре»: открыто концовок "+countFound()+"/"+TOTAL+" · ВК-лаборатория";}
+$("againBtn").addEventListener("click",restart);
+$("copyBtn").addEventListener("click",function(){var t=resultTxt();
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(function(){toast("Результат скопирован.");},function(){fallbackCopy(t);});}else fallbackCopy(t);});
+function fallbackCopy(t){try{var ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);toast("Результат скопирован.");}catch(e){toast("Не удалось скопировать.");}}
+$("shareBtn").addEventListener("click",function(){window.open("https://vk.com/share.php?url="+encodeURIComponent(window.location.href)+"&title="+encodeURIComponent(resultTxt())+"&no_vk_links=1","_blank","noopener");});
+var mb=document.createElement("button");mb.className="ghost";mb.id="muteBtn";mb.textContent=MUTE?"🔇 Звук выкл":"🔊 Звук вкл";
+$("ctrl").parentNode.insertBefore(mb,$("ctrl"));
+mb.addEventListener("click",function(){MUTE=!MUTE;try{localStorage.setItem(KEY+"_m",MUTE?"1":"0");}catch(e){}mb.textContent=MUTE?"🔇 Звук выкл":"🔊 Звук вкл";if(!MUTE)clickS();});
+updBadge();show("start");
+/* GAME-EVAC-END */
+</script>
+</body>
+</html>
