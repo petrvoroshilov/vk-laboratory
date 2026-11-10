@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ВК-лаборатория — каталог интерактивов и инструментов</title>
   <meta name="description" content="Хаб ВК-лаборатории: игры, школьные генераторы, скрипты и макросы. Выбирай категорию — инструменты вылетают плитками. Без оплаты, с открытым кодом.">
+  <link rel="canonical" href="https://petrvoroshilov.github.io/vk-laboratory/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ВК-лаборатория">
   <meta property="og:title" content="ВК-лаборатория — каталог">
@@ -84,6 +85,8 @@
       santa:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="40" y="40" width="44" height="40" rx="5" fill="#28324c" stroke="#fb7185" stroke-width="2"/><rect x="40" y="40" width="44" height="12" fill="#1c2740"/><line x1="62" y1="40" x2="62" y2="80" stroke="#0c1120" stroke-width="2"/><path d="M54 40 Q54 30 62 30 Q70 30 70 40" fill="none" stroke="#a3e635" stroke-width="2.5"/><path d="M92 60 H112" stroke="#22d3ee" stroke-width="2.5"/><path d="M110 56 l6 4 -6 4 z" fill="#22d3ee"/><rect x="118" y="40" width="44" height="40" rx="5" fill="#28324c" stroke="#22d3ee" stroke-width="2"/><rect x="118" y="40" width="44" height="12" fill="#1c2740"/><line x1="140" y1="40" x2="140" y2="80" stroke="#0c1120" stroke-width="2"/><path d="M132 40 Q132 30 140 30 Q148 30 148 40" fill="none" stroke="#a3e635" stroke-width="2.5"/></svg>',
       random:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><circle cx="100" cy="58" r="30" fill="none" stroke="#22d3ee" stroke-width="2.5"/><circle cx="100" cy="58" r="30" fill="none" stroke="#a3e635" stroke-width="2.5" stroke-dasharray="6 8"/><g fill="#e2e8f0"><circle cx="92" cy="50" r="3"/><circle cx="108" cy="50" r="3"/><circle cx="100" cy="58" r="3"/><circle cx="92" cy="66" r="3"/><circle cx="108" cy="66" r="3"/></g><path d="M100 22 l5 8 h-10 z" fill="#fb7185"/></svg>',
       tempclean:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><path d="M82 38 h36 l-3 50 a4 4 0 0 1 -4 4 h-22 a4 4 0 0 1 -4 -4 z" fill="none" stroke="#e2e8f0" stroke-width="2.5"/><line x1="78" y1="38" x2="122" y2="38" stroke="#e2e8f0" stroke-width="2.5"/><path d="M92 38 v-5 a4 4 0 0 1 4 -4 h8 a4 4 0 0 1 4 4 v5" fill="none" stroke="#e2e8f0" stroke-width="2.5"/><g stroke="#22d3ee" stroke-width="2"><line x1="94" y1="50" x2="94" y2="82"/><line x1="100" y1="50" x2="100" y2="82"/><line x1="106" y1="50" x2="106" y2="82"/></g><circle cx="128" cy="34" r="3" fill="#a3e635"/><circle cx="134" cy="44" r="2" fill="#a3e635"/></svg>',
+      backup:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><path d="M40 44 h30 l6 8 h40 v44 a4 4 0 0 1 -4 4 h-72 a4 4 0 0 1 -4 -4 v-52 a4 4 0 0 1 4 -4 z" fill="#28324c" stroke="#22d3ee" stroke-width="2"/><path d="M120 56 h30 l6 8 h24 v36 a4 4 0 0 1 -4 4 h-60 a4 4 0 0 1 -4 -4 v-44 a4 4 0 0 1 4 -4 z" fill="#1c2740" stroke="#a3e635" stroke-width="2"/><path d="M96 70 H116" stroke="#22d3ee" stroke-width="2.5"/><path d="M112 65 l6 5 -6 5 z" fill="#22d3ee"/></svg>',
+      wordclean:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="56" y="16" width="88" height="88" rx="6" fill="#111827" stroke="#3c4a6e" stroke-width="2"/><g font-family="Consolas,monospace" font-size="9" fill="#dbe7ff"><text x="64" y="36">Sub</text><text x="64" y="52" fill="#22d3ee">.Text="  "</text><text x="64" y="68" fill="#a3e635">Do While</text><text x="64" y="84" fill="#9ca3af">' clean</text><text x="64" y="100">End</text></g><line x1="120" y1="48" x2="140" y2="48" stroke="#fb7185" stroke-width="2"/><line x1="120" y1="64" x2="140" y2="64" stroke="#fb7185" stroke-width="2"/></svg>',
       ghost:'<svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><circle cx="100" cy="56" r="22" fill="none" stroke="#3c4a6e" stroke-width="2" stroke-dasharray="4 4"/><text x="100" y="62" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="20" fill="#3c4a6e">+</text></svg>'
     };
     const CAT={
@@ -99,7 +102,9 @@
         {href:"quiz/",kicker:"Интерактив · тест",title:"Тест ПДД и ЧС",desc:"Вопросы с объяснением после каждого ответа, счёт и рекорд.",go:"Пройти →",thumb:"quiz"}
       ],
       scripts:[
-        {href:"tempclean/",kicker:"Windows · batch",title:"Очистка temp",desc:"Готовый .bat с подтверждением и разбором каждой строки. Скачать кликом.",go:"Открыть →",thumb:"tempclean"}
+        {href:"tempclean/",kicker:"Windows · batch",title:"Очистка temp",desc:"Готовый .bat с подтверждением и разбором каждой строки. Скачать кликом.",go:"Открыть →",thumb:"tempclean"},
+        {href:"backup/",kicker:"Windows · robocopy",title:"Резервная копия",desc:"Копия Documents/Desktop/Pictures/Downloads. Только копия, оригинал цел.",go:"Открыть →",thumb:"backup"},
+        {href:"wordclean/",kicker:"Word · VBA",title:"Уборка текста",desc:"Макрос: лишние пробелы и пустые строки. Инструкция для новичка.",go:"Открыть →",thumb:"wordclean"}
       ],
       generators:[
         {href:"random/",kicker:"Инструмент · жребий",title:"Случайный выбор",desc:"Список имён → барабан → победитель или перемешанный порядок. История.",go:"Открыть →",thumb:"random"},
@@ -108,7 +113,7 @@
       orders:[]
     };
     const SOON={
-      scripts:"Скоро: резервная копия папки (.bat), макросы Word/Excel — с разбором по строкам.",
+      scripts:"Скоро: Excel · сравнение списков (VBA), BAS — с разбором по строкам.",
       generators:"Скоро: генератор паролей, таймер/секундомер — без установки.",
       orders:"Здесь будут индивидуальные разработки под вашу задачу. Хотите — напишите в обсуждение рубрики."
     };
