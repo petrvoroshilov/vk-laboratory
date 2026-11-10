@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Скрипты и макросы — ВК-лаборатория</title>
+  <meta name="description" content="Полка скриптов ВК-лаборатории: Windows, Word, Excel, BAS. Код с объяснением «как я это сделал», бесплатно.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ВК-лаборатория">
+  <meta property="og:title" content="🛠 Скрипты и макросы — полка">
+  <meta property="og:description" content="Windows · Word · Excel · BAS: код, который убирает рутину. С исходником и разбором.">
+  <meta property="og:url" content="https://petrvoroshilov.github.io/vk-laboratory/cat/scripts/">
+  <meta property="og:image" content="https://petrvoroshilov.github.io/vk-laboratory/cat/scripts/preview-scripts.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <style>
+    :root{--bg:#070b14;--card:rgba(17,24,39,.86);--accent:#22d3ee;--accent2:#a3e635;--text:#e5e7eb;--muted:#9ca3af;--border:rgba(255,255,255,.10)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,rgba(34,211,238,.16),transparent 30%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px}
+    .wrap{max-width:880px;margin:0 auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.back{color:var(--accent);text-decoration:none;font-size:14px;font-weight:700}.brand{color:var(--muted);font-size:13px}
+    h1{font-size:clamp(24px,5vw,36px);margin:0 0 6px}.sub{color:var(--muted);margin:0 0 22px;line-height:1.5}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+    .tile{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;box-shadow:0 16px 44px rgba(0,0,0,.4)}
+    .thumb{height:120px;background:#0a0f1c;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border)}.thumb svg{width:100%;height:100%}
+    .t-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}.kicker{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--accent)}h3{margin:0;font-size:18px}p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;flex:1}.go{font-weight:800;font-size:13px;color:var(--accent2)}
+    .tile.soon{opacity:.62}.tile.soon .go{color:var(--muted)}
+    footer{color:var(--muted);font-size:12px;margin-top:26px;text-align:center;line-height:1.5}footer a{color:var(--accent)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top"><a class="back" href="../../">← Все категории</a><span class="brand">ВК-лаборатория</span></div>
+    <h1>🛠 Скрипты и макросы</h1>
+    <p class="sub">Код, который убирает рутину в Windows, Word, Excel и BAS. Каждый — с исходником, инструкцией и разбором «как я это сделал».</p>
+    <div class="grid">
+      <div class="tile soon">
+        <div class="thumb"><svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="52" y="30" width="96" height="60" rx="8" fill="#111827" stroke="#3c4a6e" stroke-width="2"/><g stroke="#22d3ee" stroke-width="4" stroke-linecap="round" fill="none"><polyline points="76,50 66,60 76,70"/><polyline points="124,50 134,60 124,70"/></g><line x1="106" y1="46" x2="94" y2="74" stroke="#a3e635" stroke-width="4" stroke-linecap="round"/></svg></div>
+        <div class="t-body"><div class="kicker">Windows · batch</div><h3>Очистка временных файлов</h3><p>Один запуск — и папки temp/tmp пусты. С объяснением каждой строки.</p><span class="go">Скоро</span></div>
+      </div>
+      <div class="tile soon">
+        <div class="thumb"><svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="52" y="30" width="96" height="60" rx="8" fill="#111827" stroke="#3c4a6e" stroke-width="2"/><g stroke="#a3e635" stroke-width="4" stroke-linecap="round"><line x1="70" y1="52" x2="130" y2="52"/><line x1="70" y1="66" x2="112" y2="66"/></g></svg></div>
+        <div class="t-body"><div class="kicker">Word · макрос</div><h3>Уборка текста</h3><p>Лишние пробелы, пустые абзацы, переносы — в один клик.</p><span class="go">Скоро</span></div>
+      </div>
+      <div class="tile soon">
+        <div class="thumb"><svg viewBox="0 0 200 120"><rect width="200" height="120" fill="#0a0f1c"/><rect x="52" y="30" width="96" height="60" rx="8" fill="#111827" stroke="#3c4a6e" stroke-width="2"/><g stroke="#22d3ee" stroke-width="3"><line x1="70" y1="50" x2="130" y2="50"/><line x1="70" y1="64" x2="130" y2="64"/><line x1="92" y1="36" x2="92" y2="84"/></g></svg></div>
+        <div class="t-body"><div class="kicker">Excel · макрос</div><h3>Сравнение двух списков</h3><p>Найти расхождения между колонками без формул.</p><span class="go">Скоро</span></div>
+      </div>
+    </div>
+    <footer>Сообщество: <a href="https://vk.ru/vklaboratory1">vk.ru/vklaboratory1</a> · Обсуждение рубрики: <a href="https://vk.ru/topic-243093533_68876780">Скрипты</a></footer>
+  </div>
+</body>
+</html>
